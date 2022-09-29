@@ -13,12 +13,18 @@ import com.example.radioapp.util.NetworkResult
 import com.example.radioapp.Adapter.RadioListAdapter
 import com.example.radioapp.util.ToastUtil
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class RadioFragment : Fragment() {
 
     lateinit var binding: FragmentRadioBinding
-    private var programsList: ArrayList<ListRadio.DataX> = ArrayList()
+
+    companion object{
+     var programsList: ArrayList<ListRadio.DataX> = ArrayList()
+ }
+
     private val  radioViewModel by viewModels<RadioViewModel>()
     private lateinit var adapter: RadioListAdapter
 
@@ -35,14 +41,20 @@ class RadioFragment : Fragment() {
         binding = FragmentRadioBinding.inflate(inflater, container, false)
        // radioViewModeL = ViewModelProvider(this).get(RadioViewModel::class.java)
 
-        setupObserver()
         setupUI()
+    setupObserver()
+
 
         return binding.root
     }
 
     private fun setupUI() {
-        adapter = RadioListAdapter(requireContext(), programsList)
+
+       // val data = ListRadio.DataX("india","pop","a.jpg","dilip", " hindu","id3","www.google.com")
+       // programsList.add( data)
+
+
+        adapter = RadioListAdapter(requireContext())
             // binding. = LinearLayoutManager(this)
        binding.recyclerview.adapter = adapter
 
@@ -56,10 +68,20 @@ class RadioFragment : Fragment() {
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        if (it.success == 200) {
+                        if (it.success == 1) {
 
+
+                            programsList.addAll(it.data);
+                           adapter.notifyDataSetChanged()
+
+                        }else{
+
+                            Log.e("Tag123","fail"+it.message)
 
                         }
+
+
+
                     } }
                 is NetworkResult.Error -> {
 

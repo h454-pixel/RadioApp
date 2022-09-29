@@ -9,9 +9,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.radioapp.Model.ListRadio
 import com.example.radioapp.R
+import com.example.radioapp.fragment.RadioFragment
 
 
-class RadioListAdapter(val context: Context,val  programsList: ArrayList<ListRadio.DataX>): RecyclerView.Adapter<RadioListAdapter.ViewHolder>() {
+class RadioListAdapter(val context: Context): RecyclerView.Adapter<RadioListAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,7 +23,7 @@ class RadioListAdapter(val context: Context,val  programsList: ArrayList<ListRad
 
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val Article= programsList.get(position)
+        val Article=  RadioFragment.programsList.get(position)
 
         holder.txt2.text = Article.genre
         holder.txt1.text = Article.name
@@ -31,7 +32,7 @@ class RadioListAdapter(val context: Context,val  programsList: ArrayList<ListRad
 
     }
     override fun getItemCount(): Int {
-        return programsList.size
+        return  RadioFragment.programsList.size
     }
     class ViewHolder(ItemView: View, context: Context) : RecyclerView.ViewHolder(ItemView) {
         val ImageView:ImageView= itemView.findViewById(R.id.img_channel)
