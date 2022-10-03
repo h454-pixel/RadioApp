@@ -11,7 +11,7 @@ import com.example.radioapp.Model.ListRecommed
 interface RadioService {
 
     @FormUrlEncoded
-    @POST("api/country_list.php?")
+    @POST("api/country_list.php")
     suspend fun getCountryList(
         @Field("lc") lc: String,
         @Field("cc") cc: String,
@@ -30,8 +30,8 @@ interface RadioService {
 
 
 
-    @FormUrlEncoded
-    @POST("api/recommended_list.php?")
+   // @FormUrlEncoded
+    @POST("api/recommended_list.php")
     suspend fun getlistrecommed(): Response<ListRecommed>
 
 

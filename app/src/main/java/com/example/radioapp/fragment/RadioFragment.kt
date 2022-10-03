@@ -1,4 +1,5 @@
 package com.example.radioapp.fragment
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -62,6 +63,7 @@ class RadioFragment : Fragment() {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setupObserver() {
 
         radioViewModel.getlistradio.observe(viewLifecycleOwner) { response ->
@@ -70,8 +72,9 @@ class RadioFragment : Fragment() {
                     response.data?.let {
                         if (it.success == 1) {
 
-
+                      //      context?.let { ToastUtil.showCustomToast(it,"Welcome") }
                             programsList.addAll(it.data);
+                            binding.progressCir.visibility = View.GONE
                            adapter.notifyDataSetChanged()
 
                         }else{
@@ -86,7 +89,9 @@ class RadioFragment : Fragment() {
                 is NetworkResult.Error -> {
 
                     Log.e("Tag123","fail")
-                    context?.let { ToastUtil.showNormalToast(it,"fail") }
+                    context?.let { ToastUtil.showCustomToast(it,"Network error") }
+                    binding.progressCir.visibility = View.VISIBLE
+
                 }
 
                 else -> {

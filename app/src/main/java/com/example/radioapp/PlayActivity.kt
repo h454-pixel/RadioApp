@@ -24,21 +24,38 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
     private lateinit var playerView: PlayerView
     private lateinit var progressBar: ProgressBar
     private lateinit var titleTv: TextView
+    var links:String = ""
+    var links2:String =" "
+    var boolean:Boolean =false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
 
+         links = intent.getStringExtra("link").toString()
+         links2 = intent.getStringExtra("link2").toString()
+         boolean = intent.getBooleanExtra("bool" ,false)
 
 
+        Log.e("tag12", " "+links)
 
-            progressBar = findViewById(R.id.progressBar)
+        progressBar = findViewById(R.id.progressBar)
 
             //titleTv = findViewById(R.id.title)
+        setupPlayer()
 
-            setupPlayer()
-            addMP3()
-            addMP4Files()
+
+
+        if(boolean) {
+          addMP3()
+        } else{
+            addMP32()
+
+        }
+
+
+
+  //      addMP4Files()
 
 
             // restore playstate on Rotation
@@ -52,13 +69,23 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
             }
         }
 
-        private fun addMP4Files() {
-//            val mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4))
-//            val mediaItem2 = MediaItem.fromUri(getString(R.string.myTestMp4))
-//            val newItems: List<MediaItem> = ImmutableList.of(mediaItem, mediaItem2)
+    private fun addMP32() {
+        val mediaItem = MediaItem.fromUri(links2)
+        player.setMediaItem(mediaItem)
+        // Set the media item to be played.
+        player.setMediaItem(mediaItem)
+        // Prepare the player.
+        player.prepare()
+    }
+
+
+//        private fun addMP4Files() {
+//            val mediaItem = MediaItem.fromUri("links")
+//          //  val mediaItem2 = MediaItem.fromUri(getString(R.string.myTestMp4))
+//            val newItems: List<MediaItem> = ImmutableList.of(mediaItem)
 //            player.addMediaItems(newItems)
 //            player.prepare()
-        }
+//        }
 
         private fun setupPlayer() {
             player = ExoPlayer.Builder(this).build()
@@ -68,13 +95,13 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
         }
 
         private fun addMP3() {
-            // Build the media item.
-//            val mediaItem = MediaItem.fromUri(getString(R.string.test_mp3))
-//            player.setMediaItem(mediaItem)
-//            // Set the media item to be played.
-//            player.setMediaItem(mediaItem)
-//            // Prepare the player.
-//            player.prepare()
+
+            val mediaItem = MediaItem.fromUri(links)
+            player.setMediaItem(mediaItem)
+            // Set the media item to be played.
+            player.setMediaItem(mediaItem)
+            // Prepare the player.
+            player.prepare()
         }
 
 
@@ -87,7 +114,7 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
             super.onResume()
             setupPlayer()
             addMP3()
-            addMP4Files()
+        //    addMP4Files()
         }
 
         // handle loading
@@ -114,7 +141,7 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
         override fun onSaveInstanceState(outState: Bundle) {
             super.onSaveInstanceState(outState)
             Log.d(TAG, "onSaveInstanceState: " + player.currentPosition)
-            // current play position
+
             outState.putLong("SeekTime", player.currentPosition)
             // current mediaItem
             outState.putInt("mediaItem", player.currentMediaItemIndex)

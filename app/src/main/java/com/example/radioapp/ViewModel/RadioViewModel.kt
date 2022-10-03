@@ -50,7 +50,7 @@ class RadioViewModel@Inject constructor (private val repository: RadioRepository
         lc: String,
         ) = viewModelScope.launch {
         repository.getcountrylist(cc, lc)
-           // .collect. { values -> _getlistcountry.value = values }
+            .collect { values -> _getlistcountry.value = values }
     }
 
 
@@ -59,7 +59,7 @@ class RadioViewModel@Inject constructor (private val repository: RadioRepository
 
     fun getlistrecommed() = viewModelScope.launch {
         repository.getlistrecommed()
-        //  collect. { values -> _getlistcountry.value = values }
+            . collect { values -> _getlistrecommed.value = values }
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.radioapp.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -22,7 +23,11 @@ private const val ARG_PARAM2 = "param2"
 class RecomdFragment : Fragment() {
 
     lateinit var binding: FragmentRecomdBinding
-    private var programsList: ArrayList<ListRecommed.Recommed> = ArrayList()
+
+   companion object {
+       var programsList: ArrayList<ListRecommed.Recommed> = ArrayList()
+   }
+
     private val  radioViewModel by viewModels<RadioViewModel>()
     private lateinit var adapter: RecommedListAdapter
 
@@ -36,35 +41,39 @@ class RecomdFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding =FragmentRecomdBinding.inflate(inflater, container, false)
-        setupObserver()
         setupUI()
+        setupObserver()
+
         return binding.root
     }
 
     private fun setupUI() {
 
-        adapter = RecommedListAdapter(requireContext(), programsList)
+        adapter = RecommedListAdapter(requireContext())
         // binding. = LinearLayoutManager(this)
         binding.recyclerview.adapter = adapter
         radioViewModel.getlistrecommed()
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setupObserver() {
         radioViewModel.getlistrecommed.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        if (it.success == 200) {
+                        if (it.success == 1) {
 
-
+                       programsList.addAll(it.data);
+                            binding.progressCir.visibility = View.GONE
+                            adapter.notifyDataSetChanged()
                         }
                     } }
 
                 is NetworkResult.Error -> {
-
-                    Log.e("Tag123","fail")
-                    context?.let { ToastUtil.showNormalToast(it,"fail") }
+                    binding.progressCir.visibility = View.VISIBLE
+                    Log.e("Tag123","fail" +response.message)
+                    context?.let { ToastUtil.showNormalToast(it,"Network error"+response.message) }
                 }
                 else -> {
 
@@ -73,15 +82,14 @@ class RecomdFragment : Fragment() {
         }
 
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RecomdFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+//
+//    companion object {
+//        @JvmStatic
+//        fun newInstance(param1: String, param2: String) =
+//            RecomdFragment().apply {
+//                arguments = Bundle().apply {
+//                    putString(ARG_PARAM1, param1)
+//                    putString(ARG_PARAM2, param2)
+//                }
+//            }
     }
-}

@@ -1,5 +1,6 @@
 package com.example.radioapp.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ private const val ARG_PARAM2 = "param2"
 class CountryFragment : DialogFragment() {
 
     lateinit var binding: FragmentCountryBinding
+
     private var programsList: ArrayList<ListCountry.Country> = ArrayList()
     private val  radioViewModel by viewModels<RadioViewModel>()
     private lateinit var adapter:CountryListAdapter
@@ -35,25 +37,31 @@ class CountryFragment : DialogFragment() {
         arguments?.let {
 //            param1 = it.getString(ARG_PARAM1)
 //            param2 = it.getString(ARG_PARAM2)
+
+
+
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentCountryBinding.inflate(inflater, container, false)
         // radioViewModeL = ViewModelProvider(this).get(RadioViewModel::class.java)
-
-        setupObserver()
         setupUI()
-
+        setupObserver()
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setupObserver() {
-        radioViewModel.getlistradio.observe(viewLifecycleOwner) { response ->
+        radioViewModel.getlistcountry.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        if (it.success == 200) {
+                        if (it.success == 1) {
+
+                         programsList.addAll(it.data);
+                        //    binding.progressCir.visibility = View.GONE
+                            adapter.notifyDataSetChanged()
 
                         }
 
