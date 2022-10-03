@@ -21,12 +21,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_channel" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_channel"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/desine_round"
+        app:shapeAppearanceOverlay="@style/RoundedSquare"
         android:scaleType="centerCrop"
         android:src="@drawable/img_radio"
         app:layout_constraintEnd_toEndOf="parent"

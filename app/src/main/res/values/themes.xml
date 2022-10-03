@@ -13,4 +13,14 @@
         <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    ////rounded corner of image
+    <style name="RoundedSquare">
+        <item name="cornerSize">10%</item>
+    </style>
+    //////////
+    <style name="RoundedCornersDialog" parent="@style/Theme.MaterialComponents.Dialog">
+        <item name="dialogCornerRadius">10dp</item>
+    </style>
+
 </resources>

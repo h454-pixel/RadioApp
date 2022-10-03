@@ -60,7 +60,7 @@ class CountryFragment : DialogFragment() {
                         if (it.success == 1) {
 
                          programsList.addAll(it.data);
-                        //    binding.progressCir.visibility = View.GONE
+                          binding.progressCir.visibility = View.GONE
                             adapter.notifyDataSetChanged()
 
                         }
@@ -69,7 +69,7 @@ class CountryFragment : DialogFragment() {
                 }
 
                 is NetworkResult.Error -> {
-
+                    binding.progressCir.visibility = View.VISIBLE
                     Log.e("Tag123","fail")
                     context?.let { ToastUtil.showNormalToast(it,"fail") }
                 }

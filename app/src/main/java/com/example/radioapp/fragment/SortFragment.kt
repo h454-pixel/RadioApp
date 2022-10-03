@@ -19,6 +19,7 @@ class SortFragment : DialogFragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -31,6 +32,8 @@ class SortFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         return inflater.inflate(R.layout.fragment_sort, container, false)
     }
 
@@ -54,4 +57,8 @@ class SortFragment : DialogFragment() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         return dialog
     }
+
+   // override fun getTheme() = R.style.RoundedCornersDialog
+
+
 }

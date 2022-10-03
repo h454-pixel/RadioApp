@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@color/purple_500"
         android:orientation="horizontal"
+        android:weightSum="6"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,17 +24,31 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
-            android:layout_weight="4"
+            android:layout_weight="4.5"
             android:layout_marginBottom="10dp"
-            android:background="@color/white" />
+            android:background="@drawable/desine_round" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_flag"
+            android:layout_width="30dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.7"
+            android:background="@drawable/desine_round2"
+            android:src="@drawable/flag"></com.google.android.material.imageview.ShapeableImageView>
 
         <ImageView
             android:id="@+id/img_sort"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
-            android:layout_weight="1"
+            android:layout_weight="0.7"
             android:src="@drawable/ic_baseline_calendar_view_day_24"></ImageView>
+
+
+
+
+
 
     </LinearLayout>
 
@@ -59,10 +74,6 @@
         app:layout_constraintTop_toBottomOf="@+id/linear_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-
-
-
 
 
 

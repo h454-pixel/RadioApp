@@ -18,10 +18,12 @@ import dagger.hilt.android.HiltAndroidApp
 class MainActivity : AppCompatActivity() {
 
     lateinit var img:ImageView;
+    lateinit var img2:ImageView;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        img=findViewById(R.id.img_sort)
+        img=findViewById(R.id.img_flag)
+        img2=findViewById(R.id.img_sort)
         val tab = findViewById<TabLayout>(R.id.bottom_nav)
         val viewpager = findViewById<ViewPager>(R.id.view1)
 
@@ -33,9 +35,16 @@ class MainActivity : AppCompatActivity() {
             val dialogFragment = CountryFragment()
             dialogFragment.show(supportFragmentManager, "My  Fragment")
 
-//            val dialogFragment = SortFragment()
-//            dialogFragment.show(supportFragmentManager, "My  Fragment")
+
         }
+
+       img2.setOnClickListener {
+
+           val dialogFragment1 = SortFragment()
+            dialogFragment1.show(supportFragmentManager, "My  Fragment")
+
+       }
+
 
 
     }

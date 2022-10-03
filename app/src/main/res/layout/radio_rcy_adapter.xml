@@ -42,12 +42,13 @@
         app:layout_constraintTop_toBottomOf="@id/channel_band" />
 
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_channel"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
         android:src="@drawable/img_radio"
+        app:shapeAppearanceOverlay="@style/RoundedSquare"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,7 +81,7 @@
         android:layout_height="25dp"
         android:layout_marginStart="30dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_baseline_play_arrow_24"
+        android:src="@drawable/ic_baseline_play_arrow2_24"
         app:civ_border_color="@color/ligghtbrown"
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
