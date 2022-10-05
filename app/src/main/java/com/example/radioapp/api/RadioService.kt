@@ -1,12 +1,10 @@
 package com.example.radioapp.api
 
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
 import com.example.radioapp.Model.ListRadio
 import com.example.radioapp.Model.ListCountry
 import com.example.radioapp.Model.ListRecommed
+import retrofit2.http.*
 
 interface RadioService {
 
@@ -17,16 +15,9 @@ interface RadioService {
         @Field("cc") cc: String,
         ): Response<ListCountry>
 
-//http://radioly.app/api/stations_list.php?
-    @FormUrlEncoded
+    @Headers("Content-Type: application/json")
     @POST("api/stations_list.php")
-    suspend fun getRadioList(
-        @Field("cc") cc_key: String,
-        @Field("lc") lc: String,
-        @Field("c_code") c_code: String,
-        @Field("curentpage")currentpage: String,
-
-    ): Response<ListRadio>
+    suspend fun getRadioList(@Body radioRequest: RadioRequest): Response<ListRadio>
 
 
 

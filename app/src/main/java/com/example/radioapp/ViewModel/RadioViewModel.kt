@@ -7,14 +7,13 @@ import androidx.lifecycle.LiveData
 import com.example.radioapp.Model.ListRadio
 import com.example.radioapp.Model.ListCountry
 import com.example.radioapp.Model.ListRecommed
+import com.example.radioapp.api.RadioRequest
 
 import com.example.radioapp.Repository.RadioRepository
 
-import kotlinx.coroutines.flow.collect
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import  com.example.radioapp.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,12 +27,9 @@ class RadioViewModel@Inject constructor (private val repository: RadioRepository
 
 
     fun getRadiolist(
-        cc_key: String,
-        lc: String,
-        c_code: String,
-        curentpage: String,
+     request: RadioRequest
     ) = viewModelScope.launch {
-        repository.getRadiolist(cc_key,  lc,  c_code, curentpage)
+        repository.getRadiolist(request)
             .collect{
                     values -> _getlistradio.value =values
             }

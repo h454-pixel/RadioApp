@@ -8,6 +8,7 @@ import javax.inject.Inject
 import com.example.radioapp.util.NetworkResult
 import com.example.radioapp.Model.ListRadio
 import com.example.radioapp.Model.ListRecommed
+import com.example.radioapp.api.RadioRequest
 import com.example.radioapp.util.BaseApiResponse
 import kotlinx.coroutines.flow.flowOn
 
@@ -15,19 +16,13 @@ import kotlinx.coroutines.flow.flowOn
 class RadioRepository @Inject constructor(private val remoteSource: RemoteSource): BaseApiResponse() {
 
     suspend fun getRadiolist(
-        cc_key: String,
-        lc: String,
-        c_code: String,
-        curentpage: String,
+     request:RadioRequest
     ): Flow<NetworkResult<ListRadio>> {
         return flow {
             emit(NetworkResult.Loading())
             emit(safeApiCall {
                remoteSource.getRadiolist(
-                   cc_key,
-                   lc,
-                   c_code,
-                   curentpage,
+                 request
                 )
             })
         }.flowOn(Dispatchers.IO)

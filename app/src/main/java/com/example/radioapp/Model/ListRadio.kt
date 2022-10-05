@@ -2,7 +2,7 @@ package com.example.radioapp.Model
 
 data class ListRadio(
     val curentpage: Int,
-    val `data`: List<DataX>,
+    val `data`: List<RadioChannel>,
     val limit: Int,
     val message: String,
     val state_data: List<StateData>,
@@ -13,7 +13,7 @@ data class ListRadio(
     data class StateData(
         val name: String
     )
-    data class DataX(
+    data class RadioChannel(
         val country_name: String,
         val genre: String,
         val image: String,

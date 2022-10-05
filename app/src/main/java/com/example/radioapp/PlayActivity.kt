@@ -2,8 +2,10 @@ package com.example.radioapp
 
 import android.accessibilityservice.GestureDescription
 import android.content.ContentValues.TAG
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.SurfaceView
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -23,17 +25,39 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
     private lateinit var player: ExoPlayer
     private lateinit var playerView: PlayerView
     private lateinit var progressBar: ProgressBar
-    private lateinit var titleTv: TextView
+    lateinit var rigion:TextView
     var links:String = ""
-    var links2:String =" "
+    var links2:String=" "
+
+    var t:String =" "
+    var rig:String=" "
     var boolean:Boolean =false
+    lateinit var title:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
 
+
+
+        title = findViewById(R.id.fm1)
+        rigion=findViewById(R.id.song_name)
+
          links = intent.getStringExtra("link").toString()
-         links2 = intent.getStringExtra("link2").toString()
+         links2= intent.getStringExtra("links2").toString()
+         t = intent.getStringExtra("title").toString()
+         rig=intent.getStringExtra("rig").toString()
+         if(rig.isNullOrEmpty()) {
+
+             rigion.text ="Music entertainment"
+
+         }else{
+             rigion.text = rig
+
+         }
+
+        title.text =t
+
          boolean = intent.getBooleanExtra("bool" ,false)
 
 
@@ -44,18 +68,20 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
             //titleTv = findViewById(R.id.title)
         setupPlayer()
 
-
+  //  playerView.setShutterBackgroundColor(Color.TRANSPARENT);
 
         if(boolean) {
-          addMP3()
-        } else{
-            addMP32()
+            addMP3()
 
         }
+//        } else{
+//            addMP32()
+//
+//        }
 
 
 
-  //      addMP4Files()
+        addMP4Files()
 
 
             // restore playstate on Rotation
@@ -69,23 +95,16 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
             }
         }
 
-    private fun addMP32() {
-        val mediaItem = MediaItem.fromUri(links2)
-        player.setMediaItem(mediaItem)
-        // Set the media item to be played.
-        player.setMediaItem(mediaItem)
-        // Prepare the player.
-        player.prepare()
-    }
 
 
-//        private fun addMP4Files() {
-//            val mediaItem = MediaItem.fromUri("links")
-//          //  val mediaItem2 = MediaItem.fromUri(getString(R.string.myTestMp4))
-//            val newItems: List<MediaItem> = ImmutableList.of(mediaItem)
-//            player.addMediaItems(newItems)
-//            player.prepare()
-//        }
+
+        private fun addMP4Files() {
+            val mediaItem = MediaItem.fromUri("links2")
+          //  val mediaItem2 = MediaItem.fromUri(getString(R.string.myTestMp4))
+            val newItems: List<MediaItem> = ImmutableList.of(mediaItem)
+            player.addMediaItems(newItems)
+            player.prepare()
+        }
 
         private fun setupPlayer() {
             player = ExoPlayer.Builder(this).build()
@@ -103,7 +122,14 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
             // Prepare the player.
             player.prepare()
         }
-
+//    private fun addMP32() {
+//        val mediaItem = MediaItem.fromUri(links2)
+//        player.setMediaItem(mediaItem)
+//        // Set the media item to be played.
+//        player.setMediaItem(mediaItem)
+//        // Prepare the player.
+//        player.prepare()
+//    }
 
         override fun onStop() {
             super.onStop()
@@ -114,7 +140,7 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
             super.onResume()
             setupPlayer()
             addMP3()
-        //    addMP4Files()
+          addMP4Files()
         }
 
         // handle loading

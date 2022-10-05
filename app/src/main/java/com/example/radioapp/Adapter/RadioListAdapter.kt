@@ -39,6 +39,8 @@ class RadioListAdapter(val context: Context): RecyclerView.Adapter<RadioListAdap
 
             intent.putExtra("link", Article.st_link)
             intent.putExtra("id",Article.st_id)
+            intent.putExtra("title",Article.name)
+            intent.putExtra("rig",Article.genre)
             intent.putExtra("bool", true)
             context.startActivity(intent)
         }

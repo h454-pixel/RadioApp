@@ -12,16 +12,21 @@ import com.bumptech.glide.Glide
 import com.example.radioapp.R
 import com.example.radioapp.Model.ListCountry
 
-class CountryListAdapter(val context: Context, val programsList: ArrayList<ListCountry.Country>): RecyclerView.Adapter<CountryListAdapter.ViewHolder>() {
+class CountryListAdapter(
+    val context: Context,
+    val programsList: ArrayList<ListCountry.Country>,
+   val click: CountryListAdapter.Clickonsingle
+): RecyclerView.Adapter<CountryListAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.country_rcy_adapter, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.country_rcy_adapter, parent, false)
         return ViewHolder(view, context)
     }
 
     @SuppressLint("CheckResult")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val Article= programsList.get(position)
+        val Article = programsList.get(position)
         holder.txt1.text = Article.c_name
 
         Glide.with(holder.itemView.getContext())
@@ -29,6 +34,12 @@ class CountryListAdapter(val context: Context, val programsList: ArrayList<ListC
             .centerCrop()
             .placeholder(R.drawable.ic_baseline_play_arrow_24)
             .into(holder.img);
+
+        holder.txt1.setOnClickListener {
+       click.getclickonsingle(Article.cc)
+
+
+        }
     }
 
 
@@ -42,4 +53,12 @@ class CountryListAdapter(val context: Context, val programsList: ArrayList<ListC
         val img: ImageView = itemView.findViewById(R.id.img_channel)
         val txt1: TextView = itemView.findViewById(R.id.channel_name)
     }
+
+
+    interface Clickonsingle {
+
+        fun getclickonsingle(id: String)
+
+
     }
+}
