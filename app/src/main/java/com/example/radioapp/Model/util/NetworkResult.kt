@@ -1,4 +1,4 @@
-package com.example.radioapp.util
+package com.example.radioapp.Model.util
 
 sealed class NetworkResult<T>(
     val data: T? = null,

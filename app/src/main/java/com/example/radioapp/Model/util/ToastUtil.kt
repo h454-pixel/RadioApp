@@ -1,10 +1,11 @@
-package com.example.radioapp.util
+package com.example.radioapp.Model.util
 
 import android.content.Context
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
+import com.example.radioapp.MainActivity
 import com.example.radioapp.R
 
 
@@ -26,7 +27,7 @@ object ToastUtil {
         }
     }
 
-    fun showNormalToast(context: Context, message: String) {
+    fun showNormalToast(context: MainActivity, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

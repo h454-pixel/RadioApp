@@ -5,11 +5,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
-import com.example.radioapp.util.NetworkResult
+import com.example.radioapp.Model.util.NetworkResult
 import com.example.radioapp.Model.ListRadio
 import com.example.radioapp.Model.ListRecommed
 import com.example.radioapp.api.RadioRequest
-import com.example.radioapp.util.BaseApiResponse
+import com.example.radioapp.Model.util.BaseApiResponse
 import kotlinx.coroutines.flow.flowOn
 
 

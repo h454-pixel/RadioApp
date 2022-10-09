@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.radioapp.R
 import com.example.radioapp.Model.ListCountry
+import com.example.radioapp.clicklistener.CountryClickListener
 
 class CountryListAdapter(
-    val context: Context,
-    val programsList: ArrayList<ListCountry.Country>,
-   val click: CountryListAdapter.Clickonsingle
+    val context: Context, val programsList: ArrayList<ListCountry.Country>,
+    val click: CountryClickListener
 ): RecyclerView.Adapter<CountryListAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -36,7 +36,7 @@ class CountryListAdapter(
             .into(holder.img);
 
         holder.txt1.setOnClickListener {
-       click.getclickonsingle(Article.cc)
+       click.clickCountry(Article.cc)
 
 
         }

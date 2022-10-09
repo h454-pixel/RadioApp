@@ -11,12 +11,20 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.radioapp.Model.ListRadio
 import com.example.radioapp.R
 import com.example.radioapp.fragment.RadioFragment
 import com.example.radioapp.PlayActivity
+import com.example.radioapp.clicklistener.CountryClickListener
 
 
 class RadioListAdapter(val context: Context): RecyclerView.Adapter<RadioListAdapter.ViewHolder>() {
+    var programsList: ArrayList<ListRadio.RadioChannel> = ArrayList()
+ fun setdata(programsList: ArrayList<ListRadio.RadioChannel> ){
+
+      this.programsList =programsList
+
+ }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,19 +36,25 @@ class RadioListAdapter(val context: Context): RecyclerView.Adapter<RadioListAdap
     // binds the list items to a view
     @SuppressLint("CheckResult")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val Article=  RadioFragment.programsList.get(position)
+        val Article=  programsList.get(position)
 
         holder.txt2.text = Article.genre
         holder.txt1.text = Article.name
         holder.txt3.text= Article.country_name
 
         holder.layout.setOnClickListener {
-            val intent: Intent = Intent(context,  PlayActivity::class.java)
 
-            intent.putExtra("link", Article.st_link)
+//           val bundle:Bundle =Bundle()
+//            bundle.putSerializable("list", RadioFragment.programsList)
+
+            val intent: Intent = Intent(context,  PlayActivity::class.java)
+          //  intent.putExtras(bundle)
+           intent.putExtra("link", Article.st_link)
             intent.putExtra("id",Article.st_id)
             intent.putExtra("title",Article.name)
             intent.putExtra("rig",Article.genre)
+
+          //  intent.putExtra("list",RadioFragment.programsList)
             intent.putExtra("bool", true)
             context.startActivity(intent)
         }
@@ -53,7 +67,7 @@ class RadioListAdapter(val context: Context): RecyclerView.Adapter<RadioListAdap
 
     }
     override fun getItemCount(): Int {
-        return  RadioFragment.programsList.size
+        return  programsList.size
     }
     class ViewHolder(ItemView: View, context: Context) : RecyclerView.ViewHolder(ItemView) {
         val ImageView:ImageView= itemView.findViewById(R.id.img_channel)

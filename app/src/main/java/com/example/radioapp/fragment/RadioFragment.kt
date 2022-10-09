@@ -1,44 +1,54 @@
 package com.example.radioapp.fragment
+
 import android.annotation.SuppressLint
+import android.content.Context
+import com.example.radioapp.clicklistener.CountryClickListener
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.example.radioapp.databinding.FragmentRadioBinding
 import com.example.radioapp.ViewModel.RadioViewModel
 import com.example.radioapp.Model.ListRadio
 
-import com.example.radioapp.util.NetworkResult
+import com.example.radioapp.Model.util.NetworkResult
 import com.example.radioapp.Adapter.RadioListAdapter
-import com.example.radioapp.util.ToastUtil
- import com.example.radioapp.ViewModel.ShareViewModel
+import com.example.radioapp.MainActivity
+import com.example.radioapp.Model.util.ToastUtil
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.radioapp.api.PreferencesModule
 import com.example.radioapp.api.RadioRequest
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
-class RadioFragment : Fragment() {
+class RadioFragment() : Fragment() {
 
     lateinit var binding: FragmentRadioBinding
+    var programsList: ArrayList<ListRadio.RadioChannel> = ArrayList()
 
     //    ///////searching////
 //    private var offset = "0"
 //    private var searchKey = ""
 //    private lateinit var model: ShareViewModel
 //    //////////////////
-    var sharcountry: String = " "
+    var sharcountry: String = "in"
     var allowresfresh = false
 
     companion object {
-        var programsList: ArrayList<ListRadio.RadioChannel> = ArrayList()
+
         var canCallApi = false
+
+
     }
+
+    fun setdata(coutryclicklistner: CountryClickListener) {
+        //   ToastUtil.showNormalToast(this@MainActivity,"select country")
+
+    }
+
 
     private val radioViewModel by viewModels<RadioViewModel>()
     private lateinit var adapter: RadioListAdapter
@@ -61,8 +71,8 @@ class RadioFragment : Fragment() {
         context?.let { PreferencesModule.init(it) }
         // radioViewModeL = ViewModelProvider(this).get(RadioViewModel::class.java)
 
-          setupUI()
-          setupObserver()
+        setupUI()
+        setupObserver()
 
 
         return binding.root
@@ -72,7 +82,7 @@ class RadioFragment : Fragment() {
 
         sharcountry = PreferencesModule.read("first").toString()
 
-        context?.let { ToastUtil.showNormalToast(it, "read" + sharcountry) }
+        //context?.let { ToastUtil.showNormalToast(it, "read" + sharcountry) }
         // val data = ListRadio.DataX("india","pop","a.jpg","dilip", " hindu","id3","www.google.com")
         // programsList.add( data)
 
@@ -88,7 +98,7 @@ class RadioFragment : Fragment() {
         val radioRequest = RadioRequest(
             cc = "US",
             lc = "eng",
-            c_code = sharcountry,
+            c_code = "in",
             curentpage = "1"
         )
 
@@ -119,10 +129,16 @@ class RadioFragment : Fragment() {
                         if (it.success == 1) {
 
                             //      context?.let { ToastUtil.showCustomToast(it,"Welcome") }
+                            if (programsList != null) {
+
+                                programsList.clear()
+                            }
+
                             programsList.addAll(it.data);
+                            adapter.setdata(programsList)
                             binding.progressCir.visibility = View.GONE
                             adapter.notifyDataSetChanged()
-
+                           // searchRadio("")
                         } else {
 
                             Log.e("Tag123", "fail" + it.message)
@@ -146,8 +162,6 @@ class RadioFragment : Fragment() {
             }
         }
     }
-
-
 
 
 //    @SuppressLint("NotifyDataSetChanged")
@@ -177,9 +191,48 @@ class RadioFragment : Fragment() {
 //    }
 
 
+    fun fragmentRefresh(context: Context, id: String) {
+
+        ToastUtil.showNormalToast(context as MainActivity, "select country: " + id)
+
+        val radioRequest = RadioRequest(
+            cc = "US",
+            lc = "eng",
+            c_code = id,
+            curentpage = "1"
+        )
+
+
+        radioViewModel.getRadiolist(radioRequest)
 
 
     }
+
+
+    fun searchRadio(serchkeyword: String) {
+
+
+        if (serchkeyword.isNotEmpty()) {
+            var updatedProgramsList: ArrayList<ListRadio.RadioChannel> = ArrayList()
+            for (radioChannel in programsList) {
+
+                if (radioChannel.name.contains(serchkeyword)) {
+                    updatedProgramsList.add(radioChannel)
+                }
+            }
+
+            adapter.setdata(updatedProgramsList)
+            adapter.notifyDataSetChanged()
+        } else {
+
+            adapter.setdata(programsList)
+            adapter.notifyDataSetChanged()
+
+        }
+
+
+    }
+}
 
 
 

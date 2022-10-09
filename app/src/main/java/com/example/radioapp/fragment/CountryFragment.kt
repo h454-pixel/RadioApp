@@ -12,16 +12,16 @@ import com.example.radioapp.Adapter.CountryListAdapter
 import com.example.radioapp.ViewModel.RadioViewModel
 import com.example.radioapp.Model.ListCountry
 import com.example.radioapp.databinding.FragmentCountryBinding
-import com.example.radioapp.util.NetworkResult
-import com.example.radioapp.util.ToastUtil
+import com.example.radioapp.Model.util.NetworkResult
 import com.example.radioapp.api.PreferencesModule
+import com.example.radioapp.clicklistener.CountryClickListener
 
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 @AndroidEntryPoint
-class CountryFragment : DialogFragment() ,CountryListAdapter.Clickonsingle {
+class CountryFragment(val coutryclicklistner : CountryClickListener) : DialogFragment() ,CountryListAdapter.Clickonsingle {
 
     lateinit var binding: FragmentCountryBinding
     private var programsList: ArrayList<ListCountry.Country> = ArrayList()
@@ -68,7 +68,7 @@ class CountryFragment : DialogFragment() ,CountryListAdapter.Clickonsingle {
                 is NetworkResult.Error -> {
                     binding.progressCir.visibility = View.VISIBLE
                     Log.e("Tag123","fail")
-                    context?.let { ToastUtil.showNormalToast(it,"fail") }
+                //    context?.let { ToastUtil.showNormalToast(it,"fail") }
                 }
 
                 else -> {
@@ -79,7 +79,7 @@ class CountryFragment : DialogFragment() ,CountryListAdapter.Clickonsingle {
     }
 
     private fun setupUI() {
-        adapter = CountryListAdapter(requireContext(), programsList,this)
+        adapter = CountryListAdapter(requireContext(), programsList,coutryclicklistner)
         // binding. = LinearLayoutManager(this)
         binding.rcyCountry.adapter = adapter
 
@@ -87,22 +87,22 @@ class CountryFragment : DialogFragment() ,CountryListAdapter.Clickonsingle {
 
     }
 
-    companion object {
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CountryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+//    companion object {
+//
+//        @JvmStatic
+//        fun newInstance(param1: String, param2: String) =
+//            CountryFragment(this).apply {
+//                arguments = Bundle().apply {
+//                    putString(ARG_PARAM1, param1)
+//                    putString(ARG_PARAM2, param2)
+//                }
+//            }
+//    }
 
     override fun getclickonsingle(id: String) {
 
         PreferencesModule.write("first",id).toString()
-        context?.let { ToastUtil.showNormalToast(it,"write"+id) }
+     //   context?.let { ToastUtil.showNormalToast(it,"write"+id) }
 
     }
 }

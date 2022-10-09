@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import  com.example.radioapp.util.NetworkResult
+import  com.example.radioapp.Model.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 

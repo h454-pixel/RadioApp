@@ -10,11 +10,12 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.radioapp.Model.ListRecommed
 import com.example.radioapp.PlayActivity
 import com.example.radioapp.fragment.RecomdFragment
 import com.example.radioapp.R
 
-class RecommedListAdapter(val context: Context) : RecyclerView.Adapter<RecommedListAdapter.ViewHolder>(){
+class RecommedListAdapter(val context: Context,val programsList: ArrayList<ListRecommed.Recommed>) : RecyclerView.Adapter<RecommedListAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -24,29 +25,31 @@ class RecommedListAdapter(val context: Context) : RecyclerView.Adapter<RecommedL
 
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val Article= RecomdFragment.programsList.get(position)
+        val Article2= programsList.get(position)
 
-        holder.txt2.text = Article.genre
-        holder.txt1.text = Article.name
+        holder.txt2.text = Article2.genre
+        holder.txt1.text = Article2.name
    //     holder.txt3.text= Article.countryName
 
         holder.layout.setOnClickListener {
             val intent: Intent = Intent(context,  PlayActivity::class.java)
-            intent.putExtra("links2", Article.stLink)
-            intent.putExtra("title",Article.name)
-            intent.putExtra("rig",Article.genre)
+            intent.putExtra("link2", Article2.stLink)
+            intent.putExtra("id",Article2.stId)
+            intent.putExtra("title",Article2.name)
+            intent.putExtra("rig",Article2.genre)
+            intent.putExtra("bool", true)
             context.startActivity(intent)
         }
 
 
         Glide.with(holder.itemView.getContext())
-            .load(Article.image)
+            .load(Article2.image)
             .placeholder(R.drawable.ic_baseline_play_arrow_24)
             .into(holder.ImageView);
 
     }
     override fun getItemCount(): Int {
-        return RecomdFragment.programsList.size
+        return  programsList.size
     }
     class ViewHolder(ItemView: View, context: Context) : RecyclerView.ViewHolder(ItemView) {
         val ImageView: ImageView = itemView.findViewById(R.id.img_channel)

@@ -1,47 +1,48 @@
 package com.example.radioapp
+
+
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.View
-import android.widget.ImageView
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
-import com.example.radioapp.ViewModel.ShareViewModel
-import com.example.radioapp.fragment.CountryFragment
-import com.example.radioapp.fragment.RadioFragment
-import com.example.radioapp.fragment.RecomdFragment
-import com.example.radioapp.fragment.SortFragment
+import com.example.radioapp.clicklistener.CountryClickListener
 import com.example.radioapp.databinding.ActivityMainBinding
+import com.example.radioapp.fragment.*
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() ,Datain,CountryClickListener {
   lateinit var  binding:ActivityMainBinding
-//    lateinit var img:ImageView
+ lateinit var radioFragment:RadioFragment
+
+
+
+    //    lateinit var img:ImageView
 //    lateinit var img2:ImageView
   companion object {
     var searchText = ""
 
 }
-    var delay: Long = 1000 // 1 seconds after user stops typing
-    var last_text_edit: Long = 0
-    var handler: Handler = Handler(Looper.myLooper()!!)
-    private lateinit var model: ShareViewModel
-
-    val input_finish_checker = Runnable {
-        if (System.currentTimeMillis() > last_text_edit + delay - 500) {
-            searchText = binding.search1.text.toString()
-            model.select(true)
-        }
-    }
+//    var delay: Long = 1000 // 1 seconds after user stops typing
+//    var last_text_edit: Long = 0
+//    var handler: Handler = Handler(Looper.myLooper()!!)
+//    private lateinit var model: ShareViewModel
+//
+//    val input_finish_checker = Runnable {
+//        if (System.currentTimeMillis() > last_text_edit + delay - 500) {
+//            searchText = binding.search1.text.toString()
+//            model.select(true)
+//        }
+//    }
 
 
 
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view: View = binding.getRoot()
         setContentView(view)
-
+setupListener()
 //        img=findViewById(R.id.img_flag)
 //        img2=findViewById(R.id.img_sort)
 //
@@ -60,17 +61,17 @@ class MainActivity : AppCompatActivity() {
         val viewpager = findViewById<ViewPager>(R.id.view1)
         setupViewPager(viewpager)
         tab!!.setupWithViewPager(viewpager)
-        model = ViewModelProvider(this).get(ShareViewModel::class.java)
+        //model = ViewModelProvider(this).get(ShareViewModel::class.java)
 
 
-        setupListener()
+        ///setupListener()
 
 
 
 
 
        binding.imgFlag.setOnClickListener {
-            val dialogFragment = CountryFragment()
+            val dialogFragment = CountryFragment(this)
             dialogFragment.show(supportFragmentManager, "My  Fragment")
 
 
@@ -87,58 +88,39 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun setupListener() {
 
 
-            searchText = binding.search1.text.toString()
 
-            binding.search1.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence, start: Int, count: Int,
-                    after: Int
-                ) {
+
+        binding.search1.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                // Your piece of code on keyboard search click
+
+                searchText = binding.search1.text.toString()
+
+                   Log.e("tagsearch"," "+ searchText)
+
+                radioFragment.searchRadio(searchText)
                 }
-
-                override fun onTextChanged(
-                    s: CharSequence, start: Int, before: Int,
-                    count: Int
-                ) {
-
-//                    val str: String = s.toString()
-//                    binding.etSearch.setText(str)
+                return@OnEditorActionListener true
 
 
-//
-//                imageButton.setOnClickListener{
-//                searchText = ""
-//            }
+        })
 
 
-                    //You need to remove this to run only once
-                    handler.removeCallbacks(input_finish_checker)
-                }
-
-                override fun afterTextChanged(s: Editable) {
-
-                    //avoid triggering event when text is empty
-                    if (s.length > 0) {
-                        last_text_edit = System.currentTimeMillis()
-                        handler.postDelayed(input_finish_checker, delay)
-                    } else {
-                        searchText = ""
-                       RadioFragment.canCallApi = true
-                        model.select(true)
-                    }
-                }
-            })
-        }
+    }
 
 
-
-
+    @SuppressLint("SuspiciousIndentation")
     private fun setupViewPager(viewPager: ViewPager) {
+      radioFragment = RadioFragment()
+
+        radioFragment.setdata(this)
+
         val adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(RadioFragment(), "Radio")
+        adapter.addFragment(radioFragment, "Radio")
         adapter.addFragment(RecomdFragment(),"Recommend")
         viewPager.adapter = adapter
     }
@@ -166,6 +148,50 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+    override fun datasender(boolean: Boolean) {
+
+
+
+       val tag = "android:switcher:" + R.id.view1.toString() + ":" + 1
+
+        val f: RecomdFragment? = supportFragmentManager.findFragmentByTag(tag) as RecomdFragment?
+
+        if (f != null) {
+            f.getData(boolean)
+        }
+        Log.e("Tag", " "+ boolean)
+
+
+
+    }
+
+    override fun datasender2(boolean2: Boolean) {
+
+        val tag = "android:switcher:" + R.id.view1.toString() + ":" + 1
+
+        val f: RecomdFragment? = supportFragmentManager.findFragmentByTag(tag) as RecomdFragment?
+
+        if (f != null) {
+            f.getData2(boolean2)
+        }
+        Log.e("Tag", " "+ boolean2)
+
+
+
+    }
+
+    override fun clickCountry(id: String) {
+
+      ///  ToastUtil.showNormalToast(this@MainActivity,"select country")
+
+     radioFragment.fragmentRefresh(this@MainActivity ,id)
+
+    }
+
+
+
+
 }
 
 
