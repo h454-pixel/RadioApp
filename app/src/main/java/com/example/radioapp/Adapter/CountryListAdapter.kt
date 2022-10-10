@@ -11,16 +11,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.radioapp.R
 import com.example.radioapp.Model.ListCountry
+import com.example.radioapp.Model.ListRadio
 import com.example.radioapp.clicklistener.CountryClickListener
 
 class CountryListAdapter(
-    val context: Context, val programsList: ArrayList<ListCountry.Country>,
-    val click: CountryClickListener
-): RecyclerView.Adapter<CountryListAdapter.ViewHolder>() {
+    val context: Context, val click: CountryClickListener): RecyclerView.Adapter<CountryListAdapter.ViewHolder>() {
+
+    var programsList: ArrayList<ListCountry.Country> = ArrayList()
+    fun setdata(programsList: ArrayList<ListCountry.Country> ){
+
+        this.programsList =programsList
+
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.country_rcy_adapter, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.country_rcy_adapter, parent, false)
         return ViewHolder(view, context)
     }
 
@@ -41,8 +46,6 @@ class CountryListAdapter(
 
         }
     }
-
-
     override fun getItemCount(): Int {
         return programsList.size
     }
@@ -55,10 +58,4 @@ class CountryListAdapter(
     }
 
 
-    interface Clickonsingle {
-
-        fun getclickonsingle(id: String)
-
-
-    }
 }

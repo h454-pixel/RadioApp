@@ -1,4 +1,4 @@
-package com.example.radioapp.Model.util
+package com.example.radioapp.util
 
 import android.content.Context
 import android.view.Gravity

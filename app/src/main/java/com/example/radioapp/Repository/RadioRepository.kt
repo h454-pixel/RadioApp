@@ -5,16 +5,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
-import com.example.radioapp.Model.util.NetworkResult
+import com.example.radioapp.util.NetworkResult
 import com.example.radioapp.Model.ListRadio
 import com.example.radioapp.Model.ListRecommed
 import com.example.radioapp.api.RadioRequest
-import com.example.radioapp.Model.util.BaseApiResponse
+import com.example.radioapp.util.BaseApiResponse
 import kotlinx.coroutines.flow.flowOn
 
 
 class RadioRepository @Inject constructor(private val remoteSource: RemoteSource): BaseApiResponse() {
-
     suspend fun getRadiolist(
      request:RadioRequest
     ): Flow<NetworkResult<ListRadio>> {
@@ -27,7 +26,6 @@ class RadioRepository @Inject constructor(private val remoteSource: RemoteSource
             })
         }.flowOn(Dispatchers.IO)
     }
-
 
     suspend fun getcountrylist(
         cc: String,

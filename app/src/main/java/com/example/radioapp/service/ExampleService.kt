@@ -1,4 +1,4 @@
-package com.example.radioapp.Model.util.service
+package com.example.radioapp.service
 
 import android.R
 import android.app.Notification

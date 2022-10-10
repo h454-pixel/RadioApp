@@ -1,6 +1,7 @@
 package com.example.radioapp.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,21 +14,19 @@ import com.example.radioapp.Model.ListRecommed
 import com.example.radioapp.ViewModel.RadioViewModel
 import com.example.radioapp.api.PreferencesModule
 import com.example.radioapp.databinding.FragmentRecomdBinding
-import com.example.radioapp.Model.util.NetworkResult
-import com.example.radioapp.Model.util.ToastUtil
+import com.example.radioapp.util.NetworkResult
+import com.example.radioapp.util.ToastUtil
 import dagger.hilt.android.AndroidEntryPoint
-
-
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+
 @AndroidEntryPoint
 class RecomdFragment : Fragment() {
 
     lateinit var binding: FragmentRecomdBinding
+    var programsList: ArrayList<ListRecommed.Recommed> = ArrayList()
 
-     val programsList: ArrayList<ListRecommed.Recommed> = ArrayList()
-
-  var boolean:Boolean? =null
+  var boolean:String? =null
   var boolean2:Boolean?=null
 
     private val radioViewModel by viewModels<RadioViewModel>()
@@ -47,27 +46,18 @@ class RecomdFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentRecomdBinding.inflate(inflater, container, false)
         context?.let { PreferencesModule.init(it) }
-
-      //  boolean =
+        //  boolean =
 
         Log.e("Tag1211", " "+PreferencesModule.read("sorta"))
-
         setupUI()
         setupObserver()
-
         return binding.root
     }
 
     private fun setupUI() {
         Log.e("Tag12111", "entry"+boolean)
-//        if (boolean == true){
-//
-//
-//            programsList.sortWith(Comparator.comparing { a -> a.name })
-//
-//        }
 
-             adapter = RecommedListAdapter(requireContext(), programsList)
+        adapter = RecommedListAdapter(requireContext())
              // binding. = LinearLayoutManager(this)
              binding.recyclerview.adapter = adapter
              radioViewModel.getlistrecommed()
@@ -82,8 +72,11 @@ class RecomdFragment : Fragment() {
                 is NetworkResult.Success -> {
                     response.data?.let {
                         if (it.success == 1) {
-
                             programsList.addAll(it.data);
+                            adapter.setdata(programsList)
+
+                            Log.e("tag101", "program list" + programsList)
+
                             binding.progressCir.visibility = View.GONE
                             adapter.notifyDataSetChanged()
                         }
@@ -93,12 +86,7 @@ class RecomdFragment : Fragment() {
                 is NetworkResult.Error -> {
                     binding.progressCir.visibility = View.VISIBLE
                     Log.e("Tag123", "fail" + response.message)
-//                    context?.let {
-//                        ToastUtil.showNormalToast(
-//                            it,
-//                            "Network error" + response.message
-//                        )
-//                    }
+                    context?.let { ToastUtil.showCustomToast(it, "Network error") }
                 }
                 else -> {
 
@@ -108,53 +96,42 @@ class RecomdFragment : Fragment() {
 
     }
 
-//    companion object {
-//
-//        var programsList: ArrayList<ListRecommed.Recommed> = ArrayList()
-////        @JvmStatic
-////        fun newInstance(param1: Boolean) =
-////            RecomdFragment().apply {
-////                arguments = Bundle().apply {
-////                    putString(ARG_PARAM1, param1)
-////
-////                }
-////            }
-//    }
-
-
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
         Log.e("Tagstart", "entervalue" + boolean)
 
-        if (boolean == true) {
-            programsList.sortByDescending { list -> list.name }
-
+        if (boolean.equals("yes")) {
+            programsList.sortByDescending { it -> it.name }
+           // programsList.sortedWith(compareBy {it->it.name})
+            Log.e(" ","Sortedlistdescending:"+programsList.sortedBy{ it -> it.name })
+            adapter.setdata(programsList)
             adapter.notifyDataSetChanged()
 
         } else if (boolean2 == true)
+            programsList.sortedBy{ it -> it.name }
 
-            programsList.sortedBy{ list -> list.name }
+         Log.e(" ","Sortedlist:"+programsList.sortedBy{ it -> it.name })
 
+
+        adapter.setdata(programsList)
         adapter.notifyDataSetChanged()
     }
 
+    fun getData(context: Context, boolean: String) {
+        Log.e("Tagi11", "Rec "+boolean)
 
-
-    fun getData(data: Any) {
-        Log.e("Tagi11", "Rec "+data)
-
-     boolean = data as Boolean
+     this.boolean = boolean as String
 
     }
 
     fun getData2(data2: Boolean) {
-
-         boolean2 = data2 as Boolean
-
+        boolean2 = data2 as Boolean
 
     }
+
+
 
 
 }

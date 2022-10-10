@@ -6,22 +6,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.example.radioapp.Adapter.CountryListAdapter
+import com.example.radioapp.MainActivity
 import com.example.radioapp.ViewModel.RadioViewModel
 import com.example.radioapp.Model.ListCountry
+import com.example.radioapp.Model.ListRadio
 import com.example.radioapp.databinding.FragmentCountryBinding
-import com.example.radioapp.Model.util.NetworkResult
+import com.example.radioapp.util.NetworkResult
 import com.example.radioapp.api.PreferencesModule
 import com.example.radioapp.clicklistener.CountryClickListener
+import com.example.radioapp.util.ToastUtil
 
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 @AndroidEntryPoint
-class CountryFragment(val coutryclicklistner : CountryClickListener) : DialogFragment() ,CountryListAdapter.Clickonsingle {
+class CountryFragment(val coutryclicklistner : CountryClickListener) : DialogFragment() {
 
     lateinit var binding: FragmentCountryBinding
     private var programsList: ArrayList<ListCountry.Country> = ArrayList()
@@ -43,8 +48,11 @@ class CountryFragment(val coutryclicklistner : CountryClickListener) : DialogFra
         binding = FragmentCountryBinding.inflate(inflater, container, false)
         context?.let { PreferencesModule.init(it) }
         // radioViewModeL = ViewModelProvider(this).get(RadioViewModel::class.java)
+        setupListener()
         setupUI()
         setupObserver()
+
+
         return binding.root
     }
 
@@ -57,6 +65,7 @@ class CountryFragment(val coutryclicklistner : CountryClickListener) : DialogFra
                         if (it.success == 1) {
 
                          programsList.addAll(it.data);
+                            adapter.setdata(programsList)
                           binding.progressCir.visibility = View.GONE
                             adapter.notifyDataSetChanged()
 
@@ -68,7 +77,7 @@ class CountryFragment(val coutryclicklistner : CountryClickListener) : DialogFra
                 is NetworkResult.Error -> {
                     binding.progressCir.visibility = View.VISIBLE
                     Log.e("Tag123","fail")
-                //    context?.let { ToastUtil.showNormalToast(it,"fail") }
+                    context?.let { ToastUtil.showCustomToast(it, "Network error") }
                 }
 
                 else -> {
@@ -79,7 +88,7 @@ class CountryFragment(val coutryclicklistner : CountryClickListener) : DialogFra
     }
 
     private fun setupUI() {
-        adapter = CountryListAdapter(requireContext(), programsList,coutryclicklistner)
+        adapter = CountryListAdapter(requireContext(),coutryclicklistner)
         // binding. = LinearLayoutManager(this)
         binding.rcyCountry.adapter = adapter
 
@@ -87,22 +96,38 @@ class CountryFragment(val coutryclicklistner : CountryClickListener) : DialogFra
 
     }
 
-//    companion object {
-//
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            CountryFragment(this).apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun searchRadio(serchkeyword: String) {
+           val serchkeyword2:String  =serchkeyword.lowercase()
 
-    override fun getclickonsingle(id: String) {
+        if (serchkeyword.isNotEmpty()) {
+            val updatedProgramsList: ArrayList<ListCountry.Country> = ArrayList()
+            for (radioChannel in programsList) {
+                 val c_name2 = radioChannel.c_name.lowercase()
 
-        PreferencesModule.write("first",id).toString()
-     //   context?.let { ToastUtil.showNormalToast(it,"write"+id) }
+                if (c_name2.contains(serchkeyword2)) {
+                    updatedProgramsList.add(radioChannel)
+                }
+            }
+            adapter.setdata(updatedProgramsList)
+            adapter.notifyDataSetChanged()
+        } else {
+
+            adapter.setdata(programsList)
+            adapter.notifyDataSetChanged()
+        }
+    }
+    private fun setupListener() {
+        binding.searchBar.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                // Your piece of code on keyboard search click
+                MainActivity.searchText = binding.searchBar.text.toString()
+                Log.e("tagsearch", " " + MainActivity.searchText)
+                searchRadio(MainActivity.searchText)
+            }
+            return@OnEditorActionListener true
+
+        })
 
     }
 }

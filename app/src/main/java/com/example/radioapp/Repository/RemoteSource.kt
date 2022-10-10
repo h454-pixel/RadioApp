@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 
 class RemoteSource @Inject constructor(private val radio: RadioService) {
-    //val readAllData: LiveData<List<ListRadio>> = radio.readAllData()
 
     suspend fun getRadiolist(
 request:RadioRequest
@@ -20,11 +19,5 @@ request:RadioRequest
         cc:String,
     ) =radio.getCountryList(lc,cc)
 
-
     suspend fun getlistrecommed() =radio.getlistrecommed()
-
-
-
-
-
 }

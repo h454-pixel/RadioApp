@@ -15,6 +15,7 @@ import androidx.viewpager.widget.ViewPager
 import com.example.radioapp.clicklistener.CountryClickListener
 import com.example.radioapp.databinding.ActivityMainBinding
 import com.example.radioapp.fragment.*
+import com.example.radioapp.clicklistener.Datain
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,54 +24,31 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() ,Datain,CountryClickListener {
   lateinit var  binding:ActivityMainBinding
  lateinit var radioFragment:RadioFragment
+ lateinit var recomdFragemt:RecomdFragment
+    lateinit var countryFragment:CountryFragment
 
 
-
-    //    lateinit var img:ImageView
-//    lateinit var img2:ImageView
-  companion object {
+ companion object {
     var searchText = ""
 
 }
-//    var delay: Long = 1000 // 1 seconds after user stops typing
-//    var last_text_edit: Long = 0
-//    var handler: Handler = Handler(Looper.myLooper()!!)
-//    private lateinit var model: ShareViewModel
-//
-//    val input_finish_checker = Runnable {
-//        if (System.currentTimeMillis() > last_text_edit + delay - 500) {
-//            searchText = binding.search1.text.toString()
-//            model.select(true)
-//        }
-//    }
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(layoutInflater)
+        recomdFragemt = RecomdFragment()
         val view: View = binding.getRoot()
         setContentView(view)
-setupListener()
-//        img=findViewById(R.id.img_flag)
-//        img2=findViewById(R.id.img_sort)
-//
+
+         setupListener()
 
 
         val tab = findViewById<TabLayout>(R.id.bottom_nav)
         val viewpager = findViewById<ViewPager>(R.id.view1)
         setupViewPager(viewpager)
         tab!!.setupWithViewPager(viewpager)
-        //model = ViewModelProvider(this).get(ShareViewModel::class.java)
 
 
-        ///setupListener()
-
-
-
-
-
-       binding.imgFlag.setOnClickListener {
+        binding.imgFlag.setOnClickListener {
             val dialogFragment = CountryFragment(this)
             dialogFragment.show(supportFragmentManager, "My  Fragment")
 
@@ -79,8 +57,9 @@ setupListener()
 
       binding.imgSort.setOnClickListener {
 
-           val dialogFragment1 = SortFragment()
+           val dialogFragment1 = SortFragment(this)
             dialogFragment1.show(supportFragmentManager, "My  Fragment")
+
 
        }
 
@@ -90,10 +69,7 @@ setupListener()
 
     @SuppressLint("SuspiciousIndentation")
     private fun setupListener() {
-
-
-
-
+        countryFragment = CountryFragment(this)
         binding.search1.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 // Your piece of code on keyboard search click
@@ -103,12 +79,13 @@ setupListener()
                    Log.e("tagsearch"," "+ searchText)
 
                 radioFragment.searchRadio(searchText)
+
+
+
                 }
                 return@OnEditorActionListener true
 
-
         })
-
 
     }
 
@@ -117,7 +94,8 @@ setupListener()
     private fun setupViewPager(viewPager: ViewPager) {
       radioFragment = RadioFragment()
 
-        radioFragment.setdata(this)
+
+       // radioFragment.setdata(this)
 
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(radioFragment, "Radio")
@@ -149,18 +127,20 @@ setupListener()
 
     }
 
-    override fun datasender(boolean: Boolean) {
+    override fun datasender(boolean: String) {
 
-
-
-       val tag = "android:switcher:" + R.id.view1.toString() + ":" + 1
+        val tag = "android:switcher:" + R.id.view1.toString() + ":" + 1
 
         val f: RecomdFragment? = supportFragmentManager.findFragmentByTag(tag) as RecomdFragment?
 
         if (f != null) {
-            f.getData(boolean)
+            f.getData(this@MainActivity ,boolean)
         }
         Log.e("Tag", " "+ boolean)
+
+       //  recomdFragemt.getData()
+
+
 
 
 
@@ -181,6 +161,8 @@ setupListener()
 
     }
 
+
+    ////// for  radio fragment update
     override fun clickCountry(id: String) {
 
       ///  ToastUtil.showNormalToast(this@MainActivity,"select country")
@@ -188,6 +170,9 @@ setupListener()
      radioFragment.fragmentRefresh(this@MainActivity ,id)
 
     }
+
+
+
 
 
 

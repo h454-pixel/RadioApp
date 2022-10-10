@@ -14,14 +14,14 @@
         android:layout_marginTop="35dp"
         android:text="Sort By"
         android:textColor="@color/black"
-        android:textSize="25dp"
+        android:textSize="24dp"
         app:layout_constraintStart_toStartOf="@id/guideline2"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
         android:id="@+id/group_radio"
         android:layout_width="0dp"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="28dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@id/guideline3"
         app:layout_constraintStart_toStartOf="@id/guideline2"
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:paddingStart="17dp"
             android:text="Station name (A-Z)"></RadioButton>
 
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:paddingStart="17dp"
             android:text="Station name (Z-A)"></RadioButton>
 
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:paddingStart="17dp"
             android:text="Most Popular"></RadioButton>
 
@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
         android:text="SORT"
-        android:textSize="20dp"
+        android:textSize="18dp"
         android:textColor="@color/purple_500"
         android:layout_marginRight="20dp"
         app:layout_constraintEnd_toEndOf="@id/guideline3"
@@ -81,7 +81,7 @@
         android:text="CANCEL"
         app:layout_constraintBottom_toBottomOf="parent"
         android:textColor="@color/purple_500"
-        android:textSize="20dp"
+        android:textSize="18dp"
         app:layout_constraintEnd_toStartOf="@id/btn_sort"
         app:layout_constraintHorizontal_bias="0.847"
         android:layout_marginBottom="30dp"
@@ -93,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="50dp" />
+        app:layout_constraintGuide_begin="38dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"

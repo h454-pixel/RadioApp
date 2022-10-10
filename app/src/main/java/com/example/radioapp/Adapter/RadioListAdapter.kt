@@ -13,18 +13,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.radioapp.Model.ListRadio
 import com.example.radioapp.R
-import com.example.radioapp.fragment.RadioFragment
 import com.example.radioapp.PlayActivity
-import com.example.radioapp.clicklistener.CountryClickListener
 
 
 class RadioListAdapter(val context: Context): RecyclerView.Adapter<RadioListAdapter.ViewHolder>() {
     var programsList: ArrayList<ListRadio.RadioChannel> = ArrayList()
- fun setdata(programsList: ArrayList<ListRadio.RadioChannel> ){
+
+
+
+
+    fun setdata(programsList: ArrayList<ListRadio.RadioChannel> ){
 
       this.programsList =programsList
 
  }
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -49,12 +52,11 @@ class RadioListAdapter(val context: Context): RecyclerView.Adapter<RadioListAdap
 
             val intent: Intent = Intent(context,  PlayActivity::class.java)
           //  intent.putExtras(bundle)
-           intent.putExtra("link", Article.st_link)
+            intent.putExtra("link", Article.st_link)
             intent.putExtra("id",Article.st_id)
             intent.putExtra("title",Article.name)
             intent.putExtra("rig",Article.genre)
-
-          //  intent.putExtra("list",RadioFragment.programsList)
+        //    intent.putExtra("list",programsList)
             intent.putExtra("bool", true)
             context.startActivity(intent)
         }
@@ -77,7 +79,4 @@ class RadioListAdapter(val context: Context): RecyclerView.Adapter<RadioListAdap
         val layout:ConstraintLayout = itemView.findViewById(R.id.constraint1)
 
     }
-
-
-
 }

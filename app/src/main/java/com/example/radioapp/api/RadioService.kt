@@ -21,12 +21,9 @@ interface RadioService {
 
 
 
-   // @FormUrlEncoded
+   // @Headers("Content-Type: application/json")
     @POST("api/recommended_list.php")
     suspend fun getlistrecommed(): Response<ListRecommed>
-
-
-
 
 
 }

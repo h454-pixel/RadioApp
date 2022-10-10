@@ -1,8 +1,10 @@
 package com.example.radioapp.Model
 
+
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
 
 
 data class ListRadio(
@@ -16,7 +18,7 @@ data class ListRadio(
     val success: Int,
     val totaldata: Int,
     val totalpages: Int
-):Serializable{
+){
     data class StateData(
         @Expose
         @SerializedName("name")
@@ -26,25 +28,56 @@ data class ListRadio(
     data class RadioChannel(
         @Expose
         @SerializedName("country_name")
-        val country_name: String,
+        val country_name: String?,
         @Expose
         @SerializedName("genre")
-        val genre: String,
+        val genre: String?,
         @Expose
         @SerializedName("image")
-        val image: String,
+        val image: String?,
         @Expose
         @SerializedName("name")
-        val name: String,
+        val name: String?,
         @Expose
         @SerializedName("region")
-        val region: String,
+        val region: String?,
         @Expose
         @SerializedName("st_id")
-        val st_id: String,
+        val st_id: String?,
         @Expose
         @SerializedName("st_link")
-        val st_link: String
-        )
+        val st_link: String?
+        ): Parcelable {
+        constructor(parcel: Parcel) : this(
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString()) {
+
+
+        }
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeString(st_link)
+          //  parcel.writeString(video_file)
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR : Parcelable.Creator<RadioChannel> {
+            override fun createFromParcel(parcel: Parcel): RadioChannel {
+                return RadioChannel(parcel)
+            }
+
+            override fun newArray(size: Int): Array<RadioChannel?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 }
 

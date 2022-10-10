@@ -23,10 +23,13 @@
             android:id="@+id/search1"
             android:layout_width="0dp"
             android:layout_height="48dp"
+            android:textSize="15dp"
+            android:hint="Search by channel name "
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:imeOptions="actionSearch"
             android:inputType="text"
+            android:paddingLeft="3dp"
             android:layout_weight="4.5"
             android:layout_marginBottom="10dp"
             android:background="@drawable/desine_round" />

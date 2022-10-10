@@ -1,27 +1,34 @@
 package com.example.radioapp
 
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.radioapp.Model.ListRadio
-import com.example.radioapp.Model.util.service.ExampleService
+import com.example.radioapp.fragment.RadioFragment
+import com.example.radioapp.service.ExampleService
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.MediaMetadata
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.common.collect.ImmutableList
+import kotlinx.serialization.Serializable
 
 
-class PlayActivity : AppCompatActivity() , Player.Listener {
+class PlayActivity( ) : AppCompatActivity() , Player.Listener {
+
+
 
  companion object {
 
@@ -38,10 +45,15 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
     var rig:String=" "
     var boolean:Boolean =false
     lateinit var title:TextView
+    lateinit var backImage:ImageView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
+
+      //  Log.d(TAG, "programlistRadio " + programsList)
+
 
         val serviceIntent = Intent(this, ExampleService::class.java)
         serviceIntent.putExtra("inputExtra", "notification running")
@@ -50,23 +62,28 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
 
         play()
 
+     backImage.setOnClickListener {
+        val intent:Intent = Intent(this,MainActivity::class.java)
+         startActivity(intent)
+
+     }
+
     }
 
     private fun play() {
         title = findViewById(R.id.fm1)
+        backImage =findViewById(R.id.img_left)
         rigion=findViewById(R.id.song_name)
-        links = intent.getStringExtra("link").toString()
-//        val bundle = intent.extras
-//        if (bundle != null) {
-//            programsList = bundle.getSerializable("list") as ArrayList<ListRadio.RadioChannel>
-//        }
+      links = intent.getStringExtra("link").toString()
+//        programsList = intent.getParcelableArrayListExtra<ListRadio.RadioChannel>("list")
+      //     ?: ArrayList()
 
-         Log.e("tag1211","link"+programsList)
+        Log.e("tagArray","link"+programsList)
 
 
         link2= intent.getStringExtra("link2").toString()
 
-        Log.e("tag121","link"+link2)
+
 
         t = intent.getStringExtra("title").toString()
         rig=intent.getStringExtra("rig").toString()
@@ -212,14 +229,7 @@ class PlayActivity : AppCompatActivity() , Player.Listener {
         }
     }
 
-
-
-
-
-
-
-
-    }
+}
 
 
 

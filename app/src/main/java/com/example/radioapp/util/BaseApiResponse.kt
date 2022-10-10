@@ -1,4 +1,4 @@
-package com.example.radioapp.Model.util
+package com.example.radioapp.util
 import retrofit2.Response
 
 abstract class BaseApiResponse {
