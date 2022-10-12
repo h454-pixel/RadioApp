@@ -45,11 +45,8 @@ class RecommedListAdapter(val context: Context) : RecyclerView.Adapter<RecommedL
 
         holder.layout.setOnClickListener {
             val intent: Intent = Intent(context,  PlayActivity::class.java)
-            intent.putExtra("link2", Article2.stLink)
-            Log.e(" ","linkplay"+Article2.stLink)
-            intent.putExtra("list",programsList)
-
-            intent.putExtra("id",Article2.stId)
+            intent.putExtra("link", Article2.st_link)
+            intent.putExtra("id",Article2.st_id)
             intent.putExtra("title",Article2.name)
             intent.putExtra("rig",Article2.genre)
             intent.putExtra("bool", true)

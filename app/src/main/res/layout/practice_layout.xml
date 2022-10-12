@@ -49,9 +49,9 @@
         android:id="@+id/circle_man"
         android:layout_width="0dp"
         android:layout_height="0dp"
-            android:src="@drawable/ic_launcher_adaptive_fore"
+            android:src="@drawable/radio_icon_latest"
         app:civ_border_color="@color/purple_200"
-        app:civ_border_width="10dp"
+        app:civ_border_width="5dp"
         app:layout_constraintBottom_toTopOf="@+id/linear3"
         app:layout_constraintEnd_toEndOf="@id/guideline14"
         app:layout_constraintHorizontal_bias="0.444"
@@ -141,6 +141,7 @@
             android:src="@drawable/heart"></ImageView>
 
 
+
     </LinearLayout>
 
 
@@ -220,8 +221,8 @@
 
 
         <ImageView
-            android:id="@+id/exo_rewind"
-            style="@style/ExoMediaButton.Rewind"
+            android:id="@+id/exo_prevv"
+            style="@style/ExoMediaButton.Previous"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginBottom="43dp"
@@ -233,7 +234,7 @@
 
     <ImageView
         android:id="@+id/exo_fastforward"
-        style="@style/ExoMediaButton.FastForward"
+        style="@style/ExoMediaButton.Next"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginBottom="43dp"

@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -46,12 +47,13 @@ class PlayActivity( ) : AppCompatActivity() , Player.Listener {
     var boolean:Boolean =false
     lateinit var title:TextView
     lateinit var backImage:ImageView
+    lateinit var exoprevious:ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
       //  Log.d(TAG, "programlistRadio " + programsList)
 
 
@@ -63,14 +65,15 @@ class PlayActivity( ) : AppCompatActivity() , Player.Listener {
         play()
 
      backImage.setOnClickListener {
-        val intent:Intent = Intent(this,MainActivity::class.java)
-         startActivity(intent)
-
+         finish()
      }
+
+
 
     }
 
     private fun play() {
+        exoprevious =findViewById(R.id.exo_prevv)
         title = findViewById(R.id.fm1)
         backImage =findViewById(R.id.img_left)
         rigion=findViewById(R.id.song_name)

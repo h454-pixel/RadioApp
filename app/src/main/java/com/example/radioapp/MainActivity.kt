@@ -165,7 +165,6 @@ class MainActivity : AppCompatActivity() ,Datain,CountryClickListener {
     ////// for  radio fragment update
     override fun clickCountry(id: String) {
 
-      ///  ToastUtil.showNormalToast(this@MainActivity,"select country")
 
      radioFragment.fragmentRefresh(this@MainActivity ,id)
 

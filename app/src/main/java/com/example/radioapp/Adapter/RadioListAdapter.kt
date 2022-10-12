@@ -19,9 +19,6 @@ import com.example.radioapp.PlayActivity
 class RadioListAdapter(val context: Context): RecyclerView.Adapter<RadioListAdapter.ViewHolder>() {
     var programsList: ArrayList<ListRadio.RadioChannel> = ArrayList()
 
-
-
-
     fun setdata(programsList: ArrayList<ListRadio.RadioChannel> ){
 
       this.programsList =programsList

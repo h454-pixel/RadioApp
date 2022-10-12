@@ -20,6 +20,7 @@ import com.example.radioapp.util.ToastUtil
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.radioapp.api.PreferencesModule
 import com.example.radioapp.api.RadioRequest
+import com.hudlr.utils.paginationrecyclerview.OnPageChangeListener
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
@@ -29,11 +30,9 @@ class RadioFragment() : Fragment() {
     var programsList: ArrayList<ListRadio.RadioChannel> = ArrayList()
     var sharcountry: String = "in"
 
-
-//
-//    fun setdata(coutryclicklistner: CountryClickListener) {
-//        //   ToastUtil.showNormalToast(this@MainActivity,"select country")
-//    }
+    ////////////paginantion////////
+    private var offset: String = "1"
+    private var canCallApi = true
 
     private val radioViewModel by viewModels<RadioViewModel>()
     private lateinit var adapter: RadioListAdapter
@@ -66,14 +65,44 @@ class RadioFragment() : Fragment() {
         sharcountry = PreferencesModule.read("first").toString()
         adapter = RadioListAdapter(requireContext())
         binding.recyclerview.adapter = adapter
-        val radioRequest = RadioRequest(
-            cc = "US",
-            lc = "eng",
-            c_code = "in",
-            curentpage = "1"
-        )
+//        val radioRequest = RadioRequest(
+//            cc = "US",
+//            lc = "eng",
+//            c_code = "in",
+//            curentpage = "1"
+//        )
+//
+//        radioViewModel.getRadiolist(radioRequest)
 
-        radioViewModel.getRadiolist(radioRequest)
+
+        binding.recyclerview.setOnPageChangeListener(object : OnPageChangeListener {
+            override fun onPageChange(page: Int) {
+                //Page change listener for recycler view
+                if (programsList.size > 0)
+                    offset = programsList.get(programsList.size - 1).st_id!!
+
+
+
+                if (canCallApi) {
+                    Log.e("Taglist", "fail"+programsList)
+                    val radioRequest = RadioRequest(
+                        cc = "US",
+                        lc = "eng",
+                        c_code = "in",
+                        curentpage = offset
+                    )
+
+                    radioViewModel.getRadiolist(radioRequest)
+
+                }
+
+                Log.e("Taglist", "fail"+programsList)
+
+
+                }
+        })
+
+
 
 
     }
@@ -88,19 +117,47 @@ class RadioFragment() : Fragment() {
                         if (it.success == 1) {
 
                             //      context?.let { ToastUtil.showCustomToast(it,"Welcome") }
-                            if (programsList != null) {
+//                            if (programsList != null) {
+//
+//                                programsList.clear()
+//                            }
 
-                                programsList.clear()
+//                            programsList.addAll(it.data);
+//                            adapter.setdata(programsList)
+//                            binding.progressCir.visibility = View.GONE
+//                            adapter.notifyDataSetChanged()
+                           // searchRadio("")
+
+
+                            if (offset.equals("1")) {
+                                if (programsList!= null && programsList.size > 0)
+                                  programsList.clear()
+                            }
+                            it?.let {
+                                if (it.data.size > 0) {
+//                                    if (it.data.size < 20)
+//                                        canCallApi = false
+                               //     else
+                                        canCallApi = true
+
+                                   programsList.addAll(it.data)
+                                    adapter.setdata(programsList)
+                                    binding.progressCir.visibility = View.GONE
+                                    adapter.notifyItemRangeInserted(
+                                       programsList.size,
+                                        it.data.size
+                                    )
+
+                                //    adapter.notifyDataSetChanged()
+
+                                } else {
+                                    canCallApi = false
+                                }
                             }
 
-                            programsList.addAll(it.data);
-                            adapter.setdata(programsList)
-                            binding.progressCir.visibility = View.GONE
-                            adapter.notifyDataSetChanged()
-                           // searchRadio("")
                         } else {
 
-
+                            context?.let { ToastUtil.showCustomToast(it, "not succesfully"+response.message) }
 
                         }
 
@@ -118,17 +175,23 @@ class RadioFragment() : Fragment() {
                 }
             }
         }
+
+
     }
 ///// upadate radio data by selecting country name
-    fun fragmentRefresh(context: Context, id: String) {
+@SuppressLint("SuspiciousIndentation")
+fun fragmentRefresh(context: Context, id: String) {
     context.let { ToastUtil.showCustomToast(it, "select country: " + id) }
+
 
     val radioRequest = RadioRequest(
             cc = "US",
             lc = "eng",
             c_code = id,
-            curentpage = "1"
-        )
+          //  curentpage = "1"
+           curentpage = offset
+
+    )
 
         radioViewModel.getRadiolist(radioRequest)
     }
