@@ -17,6 +17,10 @@ import com.example.radioapp.databinding.FragmentRecomdBinding
 import com.example.radioapp.util.NetworkResult
 import com.example.radioapp.util.ToastUtil
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import kotlin.Comparator
+import kotlin.collections.ArrayList
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -115,8 +119,14 @@ class RecomdFragment : Fragment() {
     fun fragmentRefresh2(context:Context, boolean2: String) {
 
         if(boolean2.equals("yes")) {
-         //   programsList.sortedWith(compareBy {it -> it.name })
-            programsList.sortedBy{it.name}
+
+            Collections.sort(programsList, object : Comparator<ListRecommed.Recommed> {
+                override fun compare(lhs: ListRecommed.Recommed, rhs: ListRecommed.Recommed): Int {
+                    return lhs.name!!.compareTo(rhs.name!!)
+                }
+            })
+
+           // programsList.sortedBy{it.name}
             adapter.setdata(programsList)
             adapter.notifyDataSetChanged()
 

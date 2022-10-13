@@ -40,8 +40,6 @@ class MainActivity : AppCompatActivity() ,Datain,CountryClickListener {
         setContentView(view)
 
          setupListener()
-
-
         val tab = findViewById<TabLayout>(R.id.bottom_nav)
         val viewpager = findViewById<ViewPager>(R.id.view1)
         setupViewPager(viewpager)
@@ -62,9 +60,6 @@ class MainActivity : AppCompatActivity() ,Datain,CountryClickListener {
 
 
        }
-
-
-
     }
 
     @SuppressLint("SuspiciousIndentation")
@@ -80,15 +75,11 @@ class MainActivity : AppCompatActivity() ,Datain,CountryClickListener {
 
                 radioFragment.searchRadio(searchText)
 
-
-
-                }
+            }
                 return@OnEditorActionListener true
 
         })
-
     }
-
 
     @SuppressLint("SuspiciousIndentation")
     private fun setupViewPager(viewPager: ViewPager) {
@@ -123,47 +114,23 @@ class MainActivity : AppCompatActivity() ,Datain,CountryClickListener {
         override fun getPageTitle(position: Int): CharSequence {
             return mFragmentTitleList[position]
         }
-
-
     }
 
     override fun datasender(boolean: String) {
-
         recomdFragemt.fragmentRefresh(this@MainActivity ,boolean)
-
+        radioFragment.radiosort(this@MainActivity,boolean)
 
     }
 
     override fun datasender2(boolean2: String) {
-
-//        val tag = "android:switcher:" + R.id.view1.toString() + ":" + 1
-//
-//        val f: RecomdFragment? = supportFragmentManager.findFragmentByTag(tag) as RecomdFragment?
-//
-//        if (f != null) {
-//            f.getData2(boolean2)
-//        }
-//        Log.e("Tag", " "+ boolean2)
-
         recomdFragemt.fragmentRefresh2(this@MainActivity , boolean2)
-
+        radioFragment.radiosort2(this@MainActivity,boolean2)
     }
-
-
     ////// for  radio fragment update
     override fun clickCountry(id: String) {
 
-
-     radioFragment.fragmentRefresh(this@MainActivity ,id)
-
+        radioFragment.fragmentRefresh(this@MainActivity ,id)
     }
-
-
-
-
-
-
-
 }
 
 

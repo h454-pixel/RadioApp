@@ -9,18 +9,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.example.radioapp.databinding.FragmentRadioBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.radioapp.ViewModel.RadioViewModel
 import com.example.radioapp.Model.ListRadio
-
 import com.example.radioapp.util.NetworkResult
 import com.example.radioapp.Adapter.RadioListAdapter
+import com.example.radioapp.Model.ListRecommed
 import com.example.radioapp.PlayActivity
 import com.example.radioapp.util.ToastUtil
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.radioapp.api.PreferencesModule
 import com.example.radioapp.api.RadioRequest
-import com.hudlr.utils.paginationrecyclerview.OnPageChangeListener
+import com.example.radioapp.databinding.FragmentRadioBinding
+import java.util.*
+import kotlin.Comparator
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
@@ -31,11 +34,18 @@ class RadioFragment() : Fragment() {
     var sharcountry: String = "in"
 
     ////////////paginantion////////
-    private var offset: String = "1"
+    private var offset: Int = 1
     private var canCallApi = true
 
     private val radioViewModel by viewModels<RadioViewModel>()
     private lateinit var adapter: RadioListAdapter
+
+    private var loading = true
+    var pastVisiblesItems = 0
+    var visibleItemCount: Int = 0
+    var totalItemCount: Int = 0
+
+    var totalPages: Int = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,46 +73,46 @@ class RadioFragment() : Fragment() {
     private fun setupUI() {
 
         sharcountry = PreferencesModule.read("first").toString()
+
+
+        val mLayoutManager: LinearLayoutManager = LinearLayoutManager(binding.root.context)
+        binding.recyclerview.layoutManager = mLayoutManager
+
         adapter = RadioListAdapter(requireContext())
         binding.recyclerview.adapter = adapter
-//        val radioRequest = RadioRequest(
-//            cc = "US",
-//            lc = "eng",
-//            c_code = "in",
-//            curentpage = "1"
-//        )
-//
-//        radioViewModel.getRadiolist(radioRequest)
 
+        binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
-        binding.recyclerview.setOnPageChangeListener(object : OnPageChangeListener {
-            override fun onPageChange(page: Int) {
-                //Page change listener for recycler view
-                if (programsList.size > 0)
-                    offset = programsList.get(programsList.size - 1).st_id!!
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
 
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
 
+                if (dy > 0) { //check for scroll down
+                    visibleItemCount = mLayoutManager.getChildCount();
+                    totalItemCount = mLayoutManager.getItemCount();
+                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
 
-                if (canCallApi) {
-                    Log.e("Taglist", "fail"+programsList)
-                    val radioRequest = RadioRequest(
-                        cc = "US",
-                        lc = "eng",
-                        c_code = "in",
-                        curentpage = offset
-                    )
+                    if (loading) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            loading = false;
+                            Log.v("...", "Last Item Wow !");
+                            // Do pagination.. i.e. fetch new data
 
-                    radioViewModel.getRadiolist(radioRequest)
+                            if (offset <= totalPages) {
+                                offset++
 
+                                fragmentPagination(offset)
+                            }
+
+                            loading = true;
+                        }
+                    }
                 }
-
-                Log.e("Taglist", "fail"+programsList)
-
-
-                }
+            }
         })
-
-
 
 
     }
@@ -116,48 +126,35 @@ class RadioFragment() : Fragment() {
                     response.data?.let {
                         if (it.success == 1) {
 
-                            //      context?.let { ToastUtil.showCustomToast(it,"Welcome") }
-//                            if (programsList != null) {
+
+                       if (offset == 1)
+                           programsList.clear()
 //
-//                                programsList.clear()
-//                            }
-
-//                            programsList.addAll(it.data);
-//                            adapter.setdata(programsList)
-//                            binding.progressCir.visibility = View.GONE
-//                            adapter.notifyDataSetChanged()
-                           // searchRadio("")
+                           //
+                           //                                if (programsList.size > 0)
 
 
-                            if (offset.equals("1")) {
-                                if (programsList!= null && programsList.size > 0)
-                                  programsList.clear()
-                            }
+
                             it?.let {
-                                if (it.data.size > 0) {
-//                                    if (it.data.size < 20)
-//                                        canCallApi = false
-                               //     else
-                                        canCallApi = true
+                                totalPages = it.totalpages
+                                programsList.addAll(it.data)
+                                adapter.setdata(programsList)
+                                binding.progressCir.visibility = View.GONE
+                                adapter.notifyItemRangeInserted(
+                                    programsList.size,
+                                    it.data.size
+                                )
 
-                                   programsList.addAll(it.data)
-                                    adapter.setdata(programsList)
-                                    binding.progressCir.visibility = View.GONE
-                                    adapter.notifyItemRangeInserted(
-                                       programsList.size,
-                                        it.data.size
-                                    )
-
-                                //    adapter.notifyDataSetChanged()
-
-                                } else {
-                                    canCallApi = false
-                                }
                             }
 
                         } else {
 
-                            context?.let { ToastUtil.showCustomToast(it, "not succesfully"+response.message) }
+                            context?.let {
+                                ToastUtil.showCustomToast(
+                                    it,
+                                    "not succesfully" + response.message
+                                )
+                            }
 
                         }
 
@@ -178,31 +175,47 @@ class RadioFragment() : Fragment() {
 
 
     }
-///// upadate radio data by selecting country name
-@SuppressLint("SuspiciousIndentation")
-fun fragmentRefresh(context: Context, id: String) {
-    context.let { ToastUtil.showCustomToast(it, "select country: " + id) }
+
+    ///// upadate radio data by selecting country name
+    @SuppressLint("SuspiciousIndentation")
+    fun fragmentRefresh(context: Context, id: String) {
+        context.let { ToastUtil.showCustomToast(it, "select country: " + id) }
+
+        sharcountry = id
 
 
-    val radioRequest = RadioRequest(
+        val radioRequest = RadioRequest(
             cc = "US",
             lc = "eng",
             c_code = id,
-          //  curentpage = "1"
-           curentpage = offset
+            curentpage = offset.toString()
 
-    )
+        )
 
+        programsList.clear()
         radioViewModel.getRadiolist(radioRequest)
     }
 
+
+    fun fragmentPagination(offset: Int) {
+
+        val radioRequest = RadioRequest(
+            cc = "US",
+            lc = "eng",
+            c_code = sharcountry,
+            curentpage = offset.toString()
+
+        )
+
+        radioViewModel.getRadiolist(radioRequest)
+    }
 
 
     //////// search radio fragment by radio name
     @SuppressLint("NotifyDataSetChanged")
     fun searchRadio(serchkeyword: String) {
 
-        val serchkeyword2:String  =serchkeyword.lowercase()
+        val serchkeyword2: String = serchkeyword.lowercase()
         if (serchkeyword.isNotEmpty()) {
             val updatedProgramsList: ArrayList<ListRadio.RadioChannel> = ArrayList()
             for (radioChannel in programsList) {
@@ -221,6 +234,39 @@ fun fragmentRefresh(context: Context, id: String) {
             adapter.notifyDataSetChanged()
         }
     }
+
+    fun radiosort(context:Context, boolean: String) {
+
+        if(boolean.equals("yes") ){
+            programsList.sortByDescending { it -> it.name }
+            //
+            Log.e(" ","Sortedlistdescending:"+programsList.sortedBy{ it -> it.name })
+            adapter.setdata(programsList)
+            adapter.notifyDataSetChanged()
+        }
+
+    }
+
+    fun radiosort2(context:Context, boolean2: String) {
+
+
+        if(boolean2.equals("yes")) {
+
+            Collections.sort(programsList, object : Comparator<ListRadio.RadioChannel> {
+                override fun compare(lhs: ListRadio.RadioChannel, rhs: ListRadio.RadioChannel): Int {
+                    return lhs.name!!.compareTo(rhs.name!!)
+                }
+            })
+
+            // programsList.sortedBy{it.name}
+            adapter.setdata(programsList)
+            adapter.notifyDataSetChanged()
+
+        }
+
+    }
+
+
 }
 
 

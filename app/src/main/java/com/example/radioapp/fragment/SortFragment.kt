@@ -7,11 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.radioapp.clicklistener.Datain
 import com.example.radioapp.api.PreferencesModule
-
 import com.example.radioapp.databinding.FragmentSortBinding
 import dagger.hilt.android.AndroidEntryPoint
-
-
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -35,16 +32,21 @@ class SortFragment(val datain:Datain) : DialogFragment() {
         binding = FragmentSortBinding.inflate(inflater, container, false)
 
         context?.let { PreferencesModule.init(it) }
-        binding.btnSort.setOnClickListener {
+        binding.radioFirst.setOnClickListener {
           datain.datasender("yes")
         }
 
-         binding.btnCancel.setOnClickListener {
+         binding.radioSecond.setOnClickListener {
 
 
              datain.datasender2("yes")
 
          }
+
+        binding.btnCancel.setOnClickListener {
+            dismiss()
+        }
+
 
 
         return binding.root
@@ -53,16 +55,8 @@ class SortFragment(val datain:Datain) : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
-
-
     }
 
-
-    ///////// it is imp method of lifecycle to check data atteched with method or not
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        datain = context as Datain
-//    }
 
 }
 
