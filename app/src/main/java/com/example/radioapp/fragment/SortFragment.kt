@@ -36,12 +36,13 @@ class SortFragment(val datain:Datain) : DialogFragment() {
 
         context?.let { PreferencesModule.init(it) }
         binding.btnSort.setOnClickListener {
-
-        datain.datasender("yes")
+          datain.datasender("yes")
         }
 
          binding.btnCancel.setOnClickListener {
-             datain.datasender2(true)
+
+
+             datain.datasender2("yes")
 
          }
 

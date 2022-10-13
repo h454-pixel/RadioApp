@@ -195,7 +195,6 @@
 
         <ImageView
             android:id="@+id/exo_play"
-            style="@style/ExoMediaButton.Play"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
@@ -207,7 +206,6 @@
 
         <ImageView
             android:id="@+id/exo_pause"
-            style="@style/ExoMediaButton.Pause"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
@@ -222,7 +220,6 @@
 
         <ImageView
             android:id="@+id/exo_prevv"
-            style="@style/ExoMediaButton.Previous"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginBottom="43dp"
@@ -233,8 +230,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/exo_fastforward"
-        style="@style/ExoMediaButton.Next"
+        android:id="@+id/exo_nextt"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginBottom="43dp"

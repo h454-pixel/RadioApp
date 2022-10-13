@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() ,Datain,CountryClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(layoutInflater)
-        recomdFragemt = RecomdFragment()
+
         val view: View = binding.getRoot()
         setContentView(view)
 
@@ -93,13 +93,13 @@ class MainActivity : AppCompatActivity() ,Datain,CountryClickListener {
     @SuppressLint("SuspiciousIndentation")
     private fun setupViewPager(viewPager: ViewPager) {
       radioFragment = RadioFragment()
-
+        recomdFragemt = RecomdFragment()
 
        // radioFragment.setdata(this)
 
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(radioFragment, "Radio")
-        adapter.addFragment(RecomdFragment(),"Recommend")
+        adapter.addFragment(  recomdFragemt,"Recommend")
         viewPager.adapter = adapter
     }
 
@@ -129,35 +129,23 @@ class MainActivity : AppCompatActivity() ,Datain,CountryClickListener {
 
     override fun datasender(boolean: String) {
 
-        val tag = "android:switcher:" + R.id.view1.toString() + ":" + 1
-
-        val f: RecomdFragment? = supportFragmentManager.findFragmentByTag(tag) as RecomdFragment?
-
-        if (f != null) {
-            f.getData(this@MainActivity ,boolean)
-        }
-        Log.e("Tag", " "+ boolean)
-
-       //  recomdFragemt.getData()
-
-
-
+        recomdFragemt.fragmentRefresh(this@MainActivity ,boolean)
 
 
     }
 
-    override fun datasender2(boolean2: Boolean) {
+    override fun datasender2(boolean2: String) {
 
-        val tag = "android:switcher:" + R.id.view1.toString() + ":" + 1
+//        val tag = "android:switcher:" + R.id.view1.toString() + ":" + 1
+//
+//        val f: RecomdFragment? = supportFragmentManager.findFragmentByTag(tag) as RecomdFragment?
+//
+//        if (f != null) {
+//            f.getData2(boolean2)
+//        }
+//        Log.e("Tag", " "+ boolean2)
 
-        val f: RecomdFragment? = supportFragmentManager.findFragmentByTag(tag) as RecomdFragment?
-
-        if (f != null) {
-            f.getData2(boolean2)
-        }
-        Log.e("Tag", " "+ boolean2)
-
-
+        recomdFragemt.fragmentRefresh2(this@MainActivity , boolean2)
 
     }
 

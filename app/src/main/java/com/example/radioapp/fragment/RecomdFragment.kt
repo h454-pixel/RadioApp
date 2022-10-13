@@ -96,45 +96,39 @@ class RecomdFragment : Fragment() {
 
     }
 
-
     @SuppressLint("NotifyDataSetChanged")
-    override fun onResume() {
-        super.onResume()
-        Log.e("Tagstart", "entervalue" + boolean)
+    fun fragmentRefresh(context:Context, boolean: String) {
 
-        if (boolean.equals("yes")) {
+
+        if(boolean.equals("yes") ){
             programsList.sortByDescending { it -> it.name }
-           // programsList.sortedWith(compareBy {it->it.name})
+           //
             Log.e(" ","Sortedlistdescending:"+programsList.sortedBy{ it -> it.name })
             adapter.setdata(programsList)
             adapter.notifyDataSetChanged()
-
-        } else if (boolean2 == true)
-            programsList.sortedBy{ it -> it.name }
-
-         Log.e(" ","Sortedlist:"+programsList.sortedBy{ it -> it.name })
+        }
 
 
-        adapter.setdata(programsList)
-        adapter.notifyDataSetChanged()
-    }
+        }
 
-    fun getData(context: Context, boolean: String) {
-        Log.e("Tagi11", "Rec "+boolean)
+    @SuppressLint("NotifyDataSetChanged")
+    fun fragmentRefresh2(context:Context, boolean2: String) {
 
-     this.boolean = boolean as String
+        if(boolean2.equals("yes")) {
+         //   programsList.sortedWith(compareBy {it -> it.name })
+            programsList.sortedBy{it.name}
+            adapter.setdata(programsList)
+            adapter.notifyDataSetChanged()
 
-    }
-
-    fun getData2(data2: Boolean) {
-        boolean2 = data2 as Boolean
+        }
 
     }
-
-
 
 
 }
+
+
+
 
 
 

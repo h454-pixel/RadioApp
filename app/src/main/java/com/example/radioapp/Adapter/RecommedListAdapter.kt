@@ -26,11 +26,6 @@ class RecommedListAdapter(val context: Context) : RecyclerView.Adapter<RecommedL
 
     }
 
-
-
-
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recommed_rcy_adapter, parent, false)
@@ -49,7 +44,9 @@ class RecommedListAdapter(val context: Context) : RecyclerView.Adapter<RecommedL
             intent.putExtra("id",Article2.st_id)
             intent.putExtra("title",Article2.name)
             intent.putExtra("rig",Article2.genre)
+            intent.putExtra("list",programsList)
             intent.putExtra("bool", true)
+            intent.putExtra("po",position)
             context.startActivity(intent)
         }
 

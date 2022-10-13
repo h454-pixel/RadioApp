@@ -1,22 +1,21 @@
 package com.example.radioapp
 
-import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import com.example.radioapp.Model.ListRadio
-import com.example.radioapp.fragment.RadioFragment
+import com.example.radioapp.Model.ListRecommed
 import com.example.radioapp.service.ExampleService
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -24,18 +23,16 @@ import com.google.android.exoplayer2.MediaMetadata
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.common.collect.ImmutableList
-import kotlinx.serialization.Serializable
+import kotlinx.android.synthetic.main.radio_rcy_adapter.*
 
 
 class PlayActivity( ) : AppCompatActivity() , Player.Listener {
 
-
-
- companion object {
+    companion object {
 
         private const val TAG = "MainActivity"
     }
-    var programsList: ArrayList<ListRadio.RadioChannel> = ArrayList()
+    var programsList: ArrayList<ListRecommed.Recommed> = ArrayList()
     private lateinit var player: ExoPlayer
     private lateinit var playerView: PlayerView
     private lateinit var progressBar: ProgressBar
@@ -44,10 +41,15 @@ class PlayActivity( ) : AppCompatActivity() , Player.Listener {
     var link2:String=" "
     var t:String =" "
     var rig:String=" "
+    var position: Int= 0
     var boolean:Boolean =false
     lateinit var title:TextView
     lateinit var backImage:ImageView
     lateinit var exoprevious:ImageView
+    lateinit var exonext:ImageView
+    lateinit var layout: ConstraintLayout
+    lateinit var imagplay:ImageView
+    lateinit var imagepause:ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,91 +70,145 @@ class PlayActivity( ) : AppCompatActivity() , Player.Listener {
          finish()
      }
 
+        exoprevious.setOnClickListener{
+
+            nextPrevVideo(isNext = false)
+
+        }
+      exonext.setOnClickListener {
+
+          nextPrevVideo()
+
+      }
+
+//        layout.setOnClickListener {
+//
+//            if(player.isPlaying) {
+//                player.stop()
+//
+//            }
+//             else {
+//                player.play()
+//
+//            }
+//
+//        }
+
 
 
     }
 
     private fun play() {
-        exoprevious =findViewById(R.id.exo_prevv)
+        imagplay =findViewById(R.id.exo_play)
+        imagepause=findViewById(R.id.exo_pause)
+
+
+
+        layout = findViewById(R.id.layout1)
+        exonext = findViewById(R.id.exo_nextt)
+        exoprevious = findViewById(R.id.exo_prevv)
         title = findViewById(R.id.fm1)
-        backImage =findViewById(R.id.img_left)
-        rigion=findViewById(R.id.song_name)
-      links = intent.getStringExtra("link").toString()
-//        programsList = intent.getParcelableArrayListExtra<ListRadio.RadioChannel>("list")
-      //     ?: ArrayList()
+        backImage = findViewById(R.id.img_left)
+        rigion = findViewById(R.id.song_name)
+        links = intent.getStringExtra("link").toString()
+        programsList =
+            intent.getParcelableArrayListExtra<ListRecommed.Recommed>("list") ?: ArrayList()
 
-        Log.e("tagArray","link"+programsList)
+        Log.e("tagArray", "  " + programsList)
 
+        position = intent.getIntExtra("po", 0)
+        link2 = intent.getStringExtra("link2").toString()
+        //    t = intent.getStringExtra("title").toString()
+        //     rig=intent.getStringExtra("rig").toString()
+        if (rig.isNullOrEmpty()) {
+        //    rigion.text ="Music entertainment"
 
-        link2= intent.getStringExtra("link2").toString()
-
-
-
-        t = intent.getStringExtra("title").toString()
-        rig=intent.getStringExtra("rig").toString()
-        if(rig.isNullOrEmpty()) {
-
-            rigion.text ="Music entertainment"
-
-        }else{
-            rigion.text = rig
+        } else {
+            //   rigion.text = rig
 
         }
 
-        title.text =t
-        boolean = intent.getBooleanExtra("bool" ,false)
+        //   title.text =t
+        boolean = intent.getBooleanExtra("bool", false)
 
-        Log.e("tag12", " "+links)
+        Log.e("tag12", " " + links)
 
         progressBar = findViewById(R.id.progressBar)
 
         //titleTv = findViewById(R.id.title)
-        setupPlayer()
-
-          if(boolean) {
-              addMP3()
-              addMP4Files()
-          }
 
 
+        if (boolean) {
+           addMP3()
+            addMP4Files()
+        }
+    }
+    private fun addMP4Files() {
 
-        // restore playstate on Rotation
-//        if (savedInstanceState != null) {
-//            if (savedInstanceState.getInt("mediaItem") != 0) {
-//                val restoredMediaItem = savedInstanceState.getInt("mediaItem")
-//                val seekTime = savedInstanceState.getLong("SeekTime")
-//                player.seekTo(restoredMediaItem, seekTime)
-//                player.play()
-//            }
-//        }
+        val mediaItem = MediaItem.fromUri(" ")
+           //  val mediaItem2 = MediaItem.fromUri(getString(R.string.myTestMp4))
+           val newItems: List<MediaItem> = ImmutableList.of(mediaItem)
+           player.addMediaItems(newItems)
+           player.prepare()
+
 
     }
 
-
-    private fun addMP4Files() {
-            val mediaItem = MediaItem.fromUri("links2")
-          //  val mediaItem2 = MediaItem.fromUri(getString(R.string.myTestMp4))
-            val newItems: List<MediaItem> = ImmutableList.of(mediaItem)
-            player.addMediaItems(newItems)
-            player.prepare()
-        }
-
-        private fun setupPlayer() {
+    private fun addMP3() {
+            title.text = programsList[position].name
+            rigion.text =programsList[position].genre
             player = ExoPlayer.Builder(this).build()
             playerView = findViewById(R.id.video_view)
             playerView.player = player
             player.addListener(this)
-        }
 
-        private fun addMP3() {
+            val mediaItem = programsList[position].st_link?.let { MediaItem.fromUri(it) }
+                if (mediaItem != null) {
+                    player.setMediaItem(mediaItem)
+                }
 
-            val mediaItem = MediaItem.fromUri(links)
-            player.setMediaItem(mediaItem)
-            // Set the media item to be played.
-            player.setMediaItem(mediaItem)
             // Prepare the player.
-            player.prepare()
+                player.prepare()
+
+    }
+
+
+    private fun nextPrevVideo(isNext:Boolean=true){
+        if(isNext)
+           setPostion( )
+          else
+              setPostion(isIncreament = false)
+
+           addMP3()
+        boolean =false
+    }
+    private fun setPostion(isIncreament:Boolean=true){
+
+        if(isIncreament){
+            if(programsList.size-1 == position)
+                position=0
+            else
+                ++position
+
+        }else{
+              if(position==0)
+               position==programsList.size-1
+
+            else
+                --position
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
     private fun addMP32() {
         val mediaItem = MediaItem.fromUri(link2)
         player.setMediaItem(mediaItem)
@@ -169,21 +225,13 @@ class PlayActivity( ) : AppCompatActivity() , Player.Listener {
 
         override fun onResume() {
             super.onResume()
-            setupPlayer()
             addMP3()
           addMP4Files()
-
-//            if (playerServiceIsBound) {
-//                bindPlayer()
-//            }
-
-
         }
 
 
 
-        // handle loading
-        override fun onPlaybackStateChanged(state: Int) {
+    override fun onPlaybackStateChanged(state: Int) {
             when (state) {
                 Player.STATE_BUFFERING -> {
                     progressBar.visibility = View.VISIBLE
@@ -196,11 +244,10 @@ class PlayActivity( ) : AppCompatActivity() , Player.Listener {
         }
 
         //get Title from metadata
-        override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-
-       //     titleTv.text = mediaMetadata.title ?: mediaMetadata.displayTitle ?: "no title found"
-
-        }
+//        override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+//            title.text = mediaMetadata.title ?: mediaMetadata.displayTitle ?: "no title found"
+//
+//        }
 
         // save details if Activity is destroyed
         override fun onSaveInstanceState(outState: Bundle) {
